@@ -1,0 +1,187 @@
+   /* ACTIVITÉS */
+   .activiterH1{
+    font-size: 3.5rem;
+    width: 20%;
+    letter-spacing: 0.15em;
+    margin: 4% 0 0 8%;
+    text-align: center;
+  }
+
+  .logoWrapper{
+    margin: 14% 8% 0 8%; /* top droite bas gauche*/
+    /* width: 88%; */
+    /* height: 100vh; */
+    display: grid;
+    grid-template-columns: 300px 300px 300px 300px 300px; 
+    grid-template-rows: 200px 200px 200px 200px;
+    align-items: center;
+    justify-content: center;
+  }
+  .item-1{
+    grid-row-start: 1;
+    grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    margin: 48% 0 24% 0;
+    padding: 0 0 0 0;
+    justify-items: center;
+    align-items: center;
+  }
+  .item-1:hover{
+    transform: scale(1.1);
+  }
+  .item-2{
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+    /* width: 100%;
+    height: 100%; */
+  }
+  .item-2:hover{
+    transform: scale(1.1);
+  }
+  .item-3{
+    grid-row: 2 / 3;
+    grid-column: 3 / 4;
+    margin: 0 0 0 25%;
+    /* width: 100%;
+    height: 100%; */
+  }
+  .item-3:hover{
+    transform: scale(1.1);
+  }
+  .item-4{
+    grid-row: 1 / 2;
+    grid-column: 4 / 5;
+    /* width: 100%;
+    height: 100%; */
+  }
+  .item-4:hover{
+    transform: scale(1.1);
+  }
+  .item-5{
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+    /* width: 80%;
+    height: 80%; */
+  }
+  .item-5:hover{
+    transform: scale(1.1);
+  }
+  .item-6{
+    grid-row: 3 / 4;
+    grid-column: 3 / 4;
+    /* width: 100%;
+    height: 100%; */
+  }
+  .item-6:hover{
+    transform: scale(1.1);
+  }
+  .item-7{
+    grid-row:3 / 4;
+    grid-column: 4 / 5;
+    /* width: 100%;
+    height: 100%; */
+  }
+  .item-7:hover{
+    transform: scale(1.1);
+  }
+  .item-8{
+    grid-row-start: 1;
+    grid-row-end: 4;
+    grid-column-start: 5;
+    grid-column-end: 6;
+    margin: 48% 0 22% 18%;
+    padding: 0 0 0 0;
+  }
+  .item-8:hover{
+    transform: scale(1.1);
+  }
+  
+            /* NotreRegion */
+  
+  .buttonWrapperRegion{
+    display: flex;
+    justify-content: center;
+    margin-top: 8vh;
+    margin-right: 1vw;
+  }
+  .EnSavoirPlusA{
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Ensure it wraps around the button properly */
+  }
+  .EnSavoirPlusBtn{
+    /* height: 180%;
+    width: 100%;
+  
+    border: none;
+    font-size: 1.1rem;
+    color: white;
+    border-radius: 4px;
+    border: 4px;
+  
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease; */
+    background-color: #61A2A7;
+    width: 197px;
+    height: 53px;
+    border: none;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    border: 4px;
+    color: white;
+  
+  
+  }
+  .EnSavoirPlusBtn:hover{
+    font-size: 1.2rem;
+    transform: scale(1.1);
+    /* background-color: rgba(255, 255, 255, 0.6) */
+  }
+                
+                                    /* footer */
+  
+  /* .footer{
+    display: flex;
+    justify-content: space-between;
+    background-color: #61A2A7;
+    color: white;
+    margin-top: 36vh;
+    font-size: 14px;
+  }
+  .FooterA{
+    color: aliceblue;
+    text-decoration: none;
+  }
+  .FooterA:hover{
+    color: purple;
+    transform: scale(1.4);
+    text-decoration: underline;
+  }
+  .info{
+    margin: 1% 12% 4% 8%;
+  }
+  .contact{
+    margin: 1% 12% 4% 8%;
+  }
+  .contactP{
+    margin: 0 0 6% 0 ;
+  }
+  .contactBtn{
+    width: 64%;
+    height: 14%;
+    border: none;
+    font-size: 1.1rem;
+    color: white;
+    border-radius: 4px;
+    border: 4px;
+    margin-top: 2vh;
+    margin-left: 16%;
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .contactBtn:hover{
+    font-size: 1.3rem;
+    background-color: rgba(255, 255, 255, 0.6)
+  } */

@@ -1,0 +1,26 @@
+.Titre{
+    display: flex;
+    justify-content: center;
+}
+.aProposH1{
+    font-size: 7rem;
+    font-style: italic;
+}
+.chambreMainDisplay{
+    display: flex;
+    align-items: center;
+    overflow-y: auto;
+}
+.AProposChambreMainDisplayImg{
+    height: 28%;
+    width: 28%;
+}
+.AProposChambreMainDisplayP{
+    font-size: 2rem;
+    text-align: left;
+    margin-left: 4%;
+    margin-right: 30%;
+    word-spacing: 8px;
+    /* width: 24%; */
+    overflow-y: auto;
+}
