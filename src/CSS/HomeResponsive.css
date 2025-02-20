@@ -1,0 +1,223 @@
+                /* MOBILE VERSION */
+@media (max-width: 1180px){
+    .Home-header{
+      width: 100%;
+      background-image: url('../Images/HomeMainBG.png');
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: none;
+      color: white;
+      padding: 0;
+      margin: 0;
+    }
+    .H1{
+      width: 100%;
+      font-size: 2rem;
+      margin: 0;
+      padding: 0;
+    }
+    .H2{
+      font-size: 0.9rem;
+      width: 70%;
+      margin-bottom: 8%;
+      padding: 0;
+    }
+    /* a{
+      display: none;
+    } */
+     .FixNavBarA{
+        display: none;
+     }
+    .reserve{
+      margin: 0;
+      padding: 0;
+    }
+
+    .Welcome{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+    .WelcomeH1{
+        font-size: 1.8rem;
+    }
+    .WelcomeP{
+        font-size: 1.3rem;
+        margin-bottom: 18vh;
+    }
+    .reserveCampagneMayenne{
+        margin-top: 8%;
+    }
+    .NotreMaison{
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    .NotreMaisonH1{
+        width: 90%;
+        font-size: 2.4rem;
+        margin: 2vh 0 8vh 0;
+    }
+    .NotreMaisonP{
+        font-size: 1.6rem;
+        width: 90%;
+    }
+    .galerieBtn{
+        /* width: 44%;
+        height: 10%; */
+        margin: 25% 0 0 0;
+    }
+    .NotreMaisonImg{
+        display: none;
+    }
+    .NotreRegionPetitEcrant{
+        display: none;
+    }
+    .ActiviterWrapper{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .activiterH1{
+        font-size: 2rem;
+        margin: 4vh 0 0 0;
+        padding-top: 12vh;
+        width: 90%;
+    }
+    .logoWrapper{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .logoActiviter{
+        margin: 0 0 4vh 0;
+    }
+    .NotreRegionWrapper{
+        display: none;
+    }
+    .contact{
+        display: none;
+    }
+    .footer{
+        margin: 0;
+    }
+    .NotreRegionH1{
+        display: none;
+    }
+}
+
+
+@media (max-width : 1600px) and (min-width : 1180px){
+    .logoWrapper{
+        margin-top: 18vh;
+        margin-left: 18vw;
+    }
+    .logoActiviter{
+        width: 13vw;
+        height: 13vh;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logoWrapper{
+        /* top droite bas gauche*/
+        margin: 22% 8% 0 8%; 
+        width: 88%;
+        height: 44vh;
+        display: grid;
+        grid-template-columns: 300px 300px 300px 300px; 
+        grid-template-rows: 200px 200px;
+        align-items: center;
+        justify-content: center;
+      }
+    .item-1{
+        grid-row: 1 / 1;
+        grid-column: 1 / 1;
+        margin: 0;
+
+    }
+    .item-2{
+        grid-row: 1 / 2;
+        grid-column: 2 / 3;
+        
+    }
+    .item-3{
+        grid-row: 1 / 2;
+        grid-column: 3 / 4;
+        width: 34%;
+        height: 34%;
+        margin: 0;
+        margin-left: 14%;
+    }
+    .item-4{
+        grid-row: 1 / 2;
+        grid-column: 4 / 5;
+    }
+    .item-5{
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+    }
+    .item-6{
+        grid-row: 2 / 3;
+        grid-column: 2 / 3;
+    }
+    .item-7{
+        grid-row: 2 / 3;
+        grid-column: 3 / 4;
+    }
+    .item-8{
+        grid-row:   2 / 3;
+        grid-column: 4 / 5;
+        margin: 0;
+    }
+    .NotreRegionWrapper{
+        display: none;
+    }
+    .NotreRegionPetitEcrantH1{
+        display: flex;
+        justify-content: center;
+    }
+    .NotreRegionWrapper{
+        display: none;
+        }
+    .imgNotreRegion{
+        max-width: 38vw;
+        min-width: 38vw;
+        min-height: 58vh;
+        max-height: 58vh;
+        object-fit: cover;
+        margin: 2% 0 2% 0;
+        margin-left: 4%;
+        border-radius: 2%;
+    }
+}
+
+@media (min-width: 1600px){
+    .NotreRegionPetitEcrantH1{
+        display: flex;
+        justify-content: center;
+    }
+    .NotreRegionWrapper{
+        display: none;
+    }
+    .imgNotreRegion{
+        max-width: 38vw;
+        min-width: 38vw;
+        min-height: 58vh;
+        max-height: 58vh;
+        object-fit: cover;
+        margin: 2% 0 2% 0;
+        margin-left: 4%;
+        border-radius: 2%;
+    }
+    /* .imgNotreRegion:hover{
+        transform: scale(1.1);
+    } */
+    .NotreRegionPetitEcrant{
+        background-color: #61A2A7;
+        }
+}

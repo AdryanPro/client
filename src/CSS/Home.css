@@ -1,0 +1,446 @@
+.contactBtn{
+  width: 64%;
+  height: 14%;
+  border: none;
+  font-size: 1.1rem;
+  color: white;
+  border-radius: 4px;
+  border: 4px;
+  margin-top: 2vh;
+  margin-left: 16%;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}  
+        
+        
+        
+        /* DISPLAY */
+.H1{
+  width: 984px;
+  height: 150px;
+  text-align: center;
+
+  font-size: 100px;
+  font-weight: 400;
+  line-height: 144px;
+  margin: 16vh 0 0 0;
+}
+
+.H2{
+  width: 482px;
+  height: 45px;
+
+  font-size: 29px;
+  font-weight: 400;
+  line-height: 0px;
+  letter-spacing: 0.15em;
+  text-align: center;
+  margin: 0;
+}
+.Home-header{
+  background-image: url('../Images/HomeMainBG.png');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+          /* BUTTON */
+.reserve{
+  width: 197px;
+  height: 53px;
+  border: none;
+  font-size: 1.1rem;
+  color: white;
+  border-radius: 4px;
+  border: 4px;
+  margin-top: 4%;
+  margin-bottom: 8vh;
+
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.reserve:hover{
+  font-size: 1.3rem;
+  background-color: rgba(255, 255, 255, 0.6)
+}
+          /* BOTTOM NAV BAR */
+.fixednavbar{
+  display: flex;
+  justify-content: center;
+  gap: 248px;
+  margin: 12vh 0 0 0;
+}
+
+.FixNavBarA {
+  color: white;
+  padding-left: 14px;
+  padding-right: 14px;
+  font-size: 1.5rem;
+  text-decoration: none;
+  position: relative; /* Needed for the pseudo-element to be positioned correctly */
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  left: 50%; /* Center horizontally */
+  bottom: -4px; /* Space between text and underline */
+  width: 44%; /* Adjust to the width of the <a> tag */
+  height: 2px; /* Thickness of the underline */
+  background-color: rgb(255, 255, 255); /* Color of the underline */
+  transform: translateX(-50%);/* Center the underline horizontally */
+  transition: background-color 10s ease;  /* Smooth color transition on hover */
+}
+
+a:hover::after {
+  width: 120%; /* Extend underline to full width on hover */
+  transform: translateX(0); /* Remove horizontal centering */
+  left: -10%;
+}
+            /* WELCOME DIV */
+.Welcome{
+  /* background-color: red; */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: black;
+}
+.WelcomeH1{
+  width: 54%;
+  font-size: 4.4rem;
+  font-weight: 400;
+  line-height: 120%;
+  letter-spacing: 0.15em;
+  text-align: center;
+  margin-top: 4%;
+}
+.WelcomeP{
+  width: 77%;
+  height: 80px;
+
+  font-family: Source Sans Pro;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 40.22px;
+  letter-spacing: 0.15em;
+  text-align: center;
+}
+.reserveCampagneMayenne{
+  background-color: #61A2A7;
+  width: 197px;
+  height: 53px;
+  border: none;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  border: 4px;
+  color: white;
+
+  margin-top: 8vh;
+}
+
+.NotreMaison{
+  background-color: #61A2A7;
+  height: 80vh;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  color: white;
+}
+.NotreMaisonH1{
+  width: 34%;
+  font-size: 2.9rem;
+  display: flex;
+  align-items: center;
+  /* letter-spacing: 0.15em; */
+  margin: 0 0 0 0; /* top droite bas gauche*/
+  padding: 4% 0 0 4%; /* top droite bas gauche*/
+}
+.NotreMaisonP{
+  width: 34%;
+  font-size: 1.9rem;
+  text-align: justify;
+  margin: 0 0 0 0; /* top droite bas gauche*/
+  padding: 1% 0 0 4%; /* top droite bas gauche*/
+}
+
+.galerieBtn{
+  /* width: 197px;
+  height: 53px; */
+
+  width: 247px;
+  height: 86px;
+  border: none;
+  font-size: 1.7rem;
+  color: white;
+  border-radius: 4px;
+  border: 4px;
+  margin: 6% 0 0 12%; /* top droite bas gauche*/
+
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.galerieBtn:hover{
+  font-size: 1.9rem;
+  background-color: rgba(255, 255, 255, 0.6)
+}
+
+.NotreMaisonImg{
+  width: 52%;
+  height: 86%;
+  position: absolute;
+  left: 44%;
+  top: 228%;
+}
+    /* ACTIVITÉS */
+.activiterH1{
+  font-size: 3.5rem;
+  width: 20%;
+  letter-spacing: 0.15em;
+  margin: 4% 0 0 8%;
+  text-align: center;
+}
+.logoWrapper{
+  margin: 14% 8% 0 8%; /* top droite bas gauche*/
+  /* width: 88%; */
+  /* height: 100vh; */
+  display: grid;
+  grid-template-columns: 300px 300px 300px 300px 300px; 
+  grid-template-rows: 200px 200px 200px 200px;
+  align-items: center;
+  justify-content: center;
+}
+.item-1{
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  margin: 48% 0 24% 0;
+  padding: 0 0 0 0;
+  justify-items: center;
+  align-items: center;
+}
+.item-1:hover{
+  transform: scale(1.1);
+}
+.item-2{
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  /* width: 100%;
+  height: 100%; */
+}
+.item-2:hover{
+  transform: scale(1.1);
+}
+.item-3{
+  grid-row: 2 / 3;
+  grid-column: 3 / 4;
+  margin: 0 0 0 25%;
+  /* width: 100%;
+  height: 100%; */
+}
+.item-3:hover{
+  transform: scale(1.1);
+}
+.item-4{
+  grid-row: 1 / 2;
+  grid-column: 4 / 5;
+  /* width: 100%;
+  height: 100%; */
+}
+.item-4:hover{
+  transform: scale(1.1);
+}
+.item-5{
+  grid-row: 3 / 4;
+  grid-column: 2 / 3;
+  /* width: 80%;
+  height: 80%; */
+}
+.item-5:hover{
+  transform: scale(1.1);
+}
+.item-6{
+  grid-row: 3 / 4;
+  grid-column: 3 / 4;
+  /* width: 100%;
+  height: 100%; */
+}
+.item-6:hover{
+  transform: scale(1.1);
+}
+.item-7{
+  grid-row:3 / 4;
+  grid-column: 4 / 5;
+  /* width: 100%;
+  height: 100%; */
+}
+.item-7:hover{
+  transform: scale(1.1);
+}
+.item-8{
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 5;
+  grid-column-end: 6;
+  margin: 48% 0 22% 18%;
+  padding: 0 0 0 0;
+}
+.item-8:hover{
+  transform: scale(1.1);
+}
+
+          /* NotreRegion */
+.NotreRegionWrapper{
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  /* display: NONE; */
+}
+/* .NotreRegionPetitEcrant{
+  display: none;
+} */
+.NotreRegionH1{
+  font-size: 3.5rem;
+  width: 70%;
+  letter-spacing: 0.15em;
+  text-align: center;
+  margin-bottom: 8%;
+}
+.band{
+  width: 100vw;
+  height: 490px;                 
+  background-color: #61A2A7;
+  color: #61A2A7;   
+  position: absolute;
+  margin-top: 24%;
+  z-index: -1;
+}
+.LaMayenneImgWrapper{
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 400px 400px 400px;
+  grid-template-rows: 200px 200px;
+  gap: 200px;
+}
+.NotreRegionPetitEcrant{
+  background-color: #61A2A7;
+}
+.img1{
+  /* grid-row: 2 / 3;
+  grid-column: 3 / 4; */
+  height: 244%;
+  z-index: 2;
+}
+.img2{
+  width: 154%;
+  height: 244%;
+}
+.img3{
+  grid-row: 1 / 2;
+  grid-column: 3 / 4;
+  margin-left: 75%;
+  height: 244%;
+  width: 102%;
+  z-index: 10;
+}
+.img5{
+  grid-row: 2 / 3;
+  grid-column: 3 / 4;
+  z-index: 3;
+}
+.buttonWrapperRegion{
+  display: flex;
+  justify-content: center;
+  margin-top: 8vh;
+  margin-right: 1vw;
+}
+.EnSavoirPlusA{
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Ensure it wraps around the button properly */
+}
+.EnSavoirPlusBtn{
+  /* height: 180%;
+  width: 100%;
+
+  border: none;
+  font-size: 1.1rem;
+  color: white;
+  border-radius: 4px;
+  border: 4px;
+
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease; */
+  background-color: #61A2A7;
+  width: 197px;
+  height: 53px;
+  border: none;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  border: 4px;
+  color: white;
+
+
+}
+.EnSavoirPlusBtn:hover{
+  font-size: 1.2rem;
+  transform: scale(1.1);
+  /* background-color: rgba(255, 255, 255, 0.6) */
+}
+              
+                                  /* footer */
+
+/* .footer{
+  display: flex;
+  justify-content: space-between;
+  background-color: #61A2A7;
+  color: white;
+  margin-top: 36vh;
+  font-size: 14px;
+}
+.FooterA{
+  color: aliceblue;
+  text-decoration: none;
+}
+.FooterA:hover{
+  color: purple;
+  transform: scale(1.4);
+  text-decoration: underline;
+}
+.info{
+  margin: 1% 12% 4% 8%;
+}
+.contact{
+  margin: 1% 12% 4% 8%;
+}
+.contactP{
+  margin: 0 0 6% 0 ;
+}
+.contactBtn{
+  width: 64%;
+  height: 14%;
+  border: none;
+  font-size: 1.1rem;
+  color: white;
+  border-radius: 4px;
+  border: 4px;
+  margin-top: 2vh;
+  margin-left: 16%;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.contactBtn:hover{
+  font-size: 1.3rem;
+  background-color: rgba(255, 255, 255, 0.6)
+} */
