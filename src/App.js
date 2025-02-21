@@ -1,13 +1,14 @@
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Home } from "./Components/Home";
 import { Reservation } from "./Components/Reservation";
 import { Galerie } from "./Components/Galerie";
 import { Contact } from "./Components/Contact";
 import AdminCalendar from './Components/AdminCalendar';
-import { Calendar, Lock } from "lucide-react";
 import React, { useState } from "react";
-import "./CSS/Reservation.css"
+import "./CSS/Reservation.css";
 import APropos from "./Components/APropos";
+import Footer from "./Components/LayoutComponents/Footer";
+
 function App() {
   // Global state for reservation management
   const [isAdmin, setIsAdmin] = useState(false);
@@ -55,11 +56,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      {/* Admin Password Prompt */}
       {showPasswordPrompt && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
             <div className="flex items-center gap-2 mb-4">
-              <Lock className="w-5 h-5 text-blue-600" />
               <h2 className="text-xl font-bold">Admin Access</h2>
             </div>
             <form onSubmit={handlePasswordSubmit}>
@@ -102,31 +103,9 @@ function App() {
         </div>
       )}
 
-      <header className="bg-white shadow-sm p-4 mb-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-6 h-6 text-blue-600" />
-            <h1 className="text-xl font-bold text-gray-900">Booking System</h1>
-          </div>
-          <nav className="flex gap-4">
-            <Link to="/">Home</Link>
-            <Link to="/Reservation">Reservation</Link>
-            <Link to="/Galerie">Galerie</Link>
-            <Link to="/Contact">Contact</Link>
-          </nav>
-          <button
-            onClick={handleAdminSwitch}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 flex items-center gap-2"
-          >
-            <Lock className="w-4 h-4" />
-            {isAdmin ? 'Switch to User View' : 'Switch to Admin View'}
-          </button>
-        </div>
-      </header>
-
+      {/* Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
-
         <Route
           path="/Reservation"
           element={
@@ -148,11 +127,13 @@ function App() {
             )
           }
         />
-
         <Route path="/Galerie" element={<Galerie />} />
         <Route path="/Contact" element={<Contact />} />
-        <Route path="/APropos" element={<APropos />}> </Route>
+        <Route path="/APropos" element={<APropos />} />
       </Routes>
+
+      {/* Footer with Admin Switch */}
+      <Footer isAdmin={isAdmin} handleAdminSwitch={handleAdminSwitch} />
     </div>
   );
 }

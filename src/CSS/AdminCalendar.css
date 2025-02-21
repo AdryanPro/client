@@ -1,0 +1,86 @@
+.admin-booking-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.admin-calendar {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.admin-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.admin-subtitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.admin-section {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.admin-section:last-child {
+  border-bottom: none;
+}
+
+.admin-form-group {
+  margin-bottom: 15px;
+}
+
+.admin-form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.admin-form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.admin-input-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.admin-price-input {
+  width: 120px;
+}
+
+.admin-button {
+  background: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.admin-button.red {
+  background: #dc2626;
+}
+
+.admin-button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}

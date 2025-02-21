@@ -1,190 +1,86 @@
+/* Center the form and increase its width */
 .booking-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  min-height: 100vh; /* Take full height of the viewport */
+  padding: 20px; /* Prevent it from touching edges */
 }
 
-.calendar-section {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  margin-bottom: 2rem;
+/* Style the form itself */
+form {
+  width: 50%; /* Increase width */
+  max-width: 600px; /* Prevent it from getting too big on large screens */
+  background: inherit; /* Keep existing background */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Add slight shadow for depth */
 }
 
-.form-section {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
+/* Ensure labels are visible */
 .form-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
 }
 
+/* Improve input field appearance */
 .form-input {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
 }
 
-.number-input {
-  width: 100px;
+/* Add spacing between form fields */
+.form-group {
+  margin-bottom: 20px;
 }
 
+/* Improve the options (checkboxes) layout */
 .options-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .option-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 5px;
+  font-size: 14px;
 }
 
+/* Center the "Make a Reservation" button */
 .submit-button {
-  background: #2563eb;
+  width: 100%; /* Make it take full width */
+  padding: 12px;
+  background-color: #007bff;
   color: white;
-  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
-  font-size: 1rem;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px; /* Space from last input */
 }
 
 .submit-button:hover {
-  background: #1d4ed8;
+  background-color: #0056b3;
 }
 
-.submit-button:disabled {
-  background: #93c5fd;
-  cursor: not-allowed;
+/* Ensure calendar section is properly spaced */
+.calendar-section {
+  margin-bottom: 30px;
 }
 
-/* Admin Styles */
-.admin-calendar {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  margin-bottom: 2rem;
-}
-
-.admin-section {
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 2rem;
-  margin-bottom: 2rem;
-}
-
-.admin-section:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-
-.price-input {
-  width: 150px;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.block-button {
-  background: #dc2626;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 1rem;
-  transition: background 0.2s;
-}
-
-.block-button:hover {
-  background: #b91c1c;
-}
-
-.block-button:disabled {
-  background: #fca5a5;
-  cursor: not-allowed;
-}
-
-.calendar {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
+/* Fix date picker text visibility */
 .react-datepicker-wrapper {
   width: 100%;
-  margin-bottom: 1rem;
-}
-
-.error-message {
-  color: #dc2626;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-/* Date picker custom styles */
-.react-datepicker__day--disabled {
-  color: #ccc !important;
-  background-color: #f3f4f6 !important;
-  cursor: not-allowed !important;
-}
-
-.react-datepicker__day--blocked {
-  color: #ccc !important;
-  background-color: #f3f4f6 !important;
-  cursor: not-allowed !important;
-  text-decoration: line-through;
-}
-
-.react-datepicker__day--highlighted {
-  background-color: #e5edff !important;
-}
-
-.date-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2px;
-}
-
-.price-tag {
-  font-size: 0.75rem;
-  color: #2563eb;
-  margin-top: 2px;
-}
-
-.has-price {
-  background-color: #e5edff;
-}
-
-.blocked-date {
-  background-color: #f3f4f6;
-  color: #ccc;
-  text-decoration: line-through;
-  cursor: not-allowed;
-}
-
-
-/* ADMIN */
-
-.AddScroll{
-  overflow-y: auto;
-  max-height: 500px;
 }
