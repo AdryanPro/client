@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
+import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css";
-import "../CSS/AdminCalendar.css"
+import "../CSS/AdminCalendar.css";
 
-const AdminCalendar = ({ 
-  prices, 
-  blockedDates, 
-  minNightsRules,
-  onPriceUpdate, 
-  onBlockedDatesUpdate,
-  onMinNightsUpdate
-}) => {
+const AdminCalendar = () => {
+  // State for storing fetched data
+  const [prices, setPrices] = useState({});
+  const [blockedDates, setBlockedDates] = useState([]);
+  const [minNightsRules, setMinNightsRules] = useState([]);
+
+  // State for form inputs
   const [selectedDate, setSelectedDate] = useState(null);
   const [price, setPrice] = useState('');
   const [basePrice, setBasePrice] = useState('');
@@ -21,139 +20,129 @@ const AdminCalendar = ({
   const [minNightsEndDate, setMinNightsEndDate] = useState(null);
   const [minNights, setMinNights] = useState('');
 
-  const handleSetPrice = () => {
-    if (selectedDate && price) {
+  // Fetch initial data from backend
+  useEffect(() => {
+    const fetchCalendarData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5001/api/admin-calendar');
+        setPrices(response.data.prices || {});
+        setBlockedDates(response.data.blockedDates || []);
+        setMinNightsRules(response.data.minNightsRules || []);
+      } catch (error) {
+        console.error("Error fetching calendar data:", error);
+      }
+    };
+    fetchCalendarData();
+  }, []);
+
+  // Update price for a specific date
+  const handleSetPrice = async () => {
+    if (!selectedDate || !price) return;
+    try {
       const dateStr = selectedDate.toISOString().split('T')[0];
-      const newPrices = {
-        ...prices,
-        [dateStr]: parseFloat(price)
-      };
-      onPriceUpdate(newPrices);
+      await axios.post('http://localhost:5001/api/update-price', { date: dateStr, newPrice: price });
+      setPrices(prev => ({ ...prev, [dateStr]: price }));
       setSelectedDate(null);
       setPrice('');
+    } catch (error) {
+      console.error("Error updating price:", error);
     }
   };
 
-  const handleSetBasePrice = () => {
-    if (basePrice) {
-      const basePriceNum = parseFloat(basePrice);
-      const today = new Date();
-      const oneYearFromNow = new Date();
-      oneYearFromNow.setFullYear(today.getFullYear() + 1);
-  
-      const newPrices = {};
-      let currentDate = new Date(today);
-  
-      while (currentDate <= oneYearFromNow) {
-        const dateStr = currentDate.toISOString().split('T')[0];
-        // Always set the new base price, overriding old values
-        newPrices[dateStr] = basePriceNum;
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-  
-      // Update state with the new price list
-      onPriceUpdate(newPrices);
+  // Set base price for all future dates
+  const handleSetBasePrice = async () => {
+    if (!basePrice) return;
+    try {
+      await axios.post('http://localhost:5001/api/set-base-price', { basePrice });
       setBasePrice('');
+    } catch (error) {
+      console.error("Error setting base price:", error);
     }
   };
-  
 
-  const handleBlockDateRange = () => {
-    if (blockStartDate && blockEndDate) {
-      const newBlockedDates = [...blockedDates];
-      let currentDate = new Date(blockStartDate);
-      
-      while (currentDate <= blockEndDate) {
-        const dateStr = currentDate.toISOString().split('T')[0];
-        if (!newBlockedDates.includes(dateStr)) {
-          newBlockedDates.push(dateStr);
-        }
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-      
-      onBlockedDatesUpdate(newBlockedDates);
+  // Block a date range
+  const handleBlockDateRange = async () => {
+    if (!blockStartDate || !blockEndDate) return;
+    try {
+      await axios.post('http://localhost:5001/api/block-dates', {
+        startDate: blockStartDate.toISOString().split('T')[0],
+        endDate: blockEndDate.toISOString().split('T')[0],
+      });
+      setBlockedDates(prev => [...prev, ...getDateRange(blockStartDate, blockEndDate)]);
       setBlockStartDate(null);
       setBlockEndDate(null);
+    } catch (error) {
+      console.error("Error blocking dates:", error);
     }
   };
 
-  const handleSetMinNights = () => {
-    if (minNightsStartDate && minNightsEndDate && minNights) {
-      const newRule = {
+  // Unblock a date range
+  const handleUnblockDateRange = async () => {
+    if (!blockStartDate || !blockEndDate) return;
+    try {
+      await axios.post('http://localhost:5001/api/unblock-dates', {
+        startDate: blockStartDate.toISOString().split('T')[0],
+        endDate: blockEndDate.toISOString().split('T')[0],
+      });
+      setBlockedDates(prev => prev.filter(date => !getDateRange(blockStartDate, blockEndDate).includes(date)));
+      setBlockStartDate(null);
+      setBlockEndDate(null);
+    } catch (error) {
+      console.error("Error unblocking dates:", error);
+    }
+  };
+
+  // Set minimum nights for a period
+  const handleSetMinNights = async () => {
+    if (!minNightsStartDate || !minNightsEndDate || !minNights) return;
+    try {
+      await axios.post('http://localhost:5001/api/set-min-nights', {
         startDate: minNightsStartDate.toISOString().split('T')[0],
         endDate: minNightsEndDate.toISOString().split('T')[0],
-        minNights: parseInt(minNights, 10)
-      };
-      
-      const filteredRules = minNightsRules.filter(rule => 
-        rule.endDate < newRule.startDate || rule.startDate > newRule.endDate
-      );
-      
-      onMinNightsUpdate([...filteredRules, newRule]);
+        minNights,
+      });
+      setMinNightsRules(prev => [...prev, {
+        startDate: minNightsStartDate.toISOString().split('T')[0],
+        endDate: minNightsEndDate.toISOString().split('T')[0],
+        minNights,
+      }]);
       setMinNightsStartDate(null);
       setMinNightsEndDate(null);
       setMinNights('');
+    } catch (error) {
+      console.error("Error setting minimum nights:", error);
     }
   };
 
-  const handleRemoveMinNightsRule = (index) => {
-    const newRules = [...minNightsRules];
-    newRules.splice(index, 1);
-    onMinNightsUpdate(newRules);
-  };
-
-  const handleBlockDate = () => {
-    if (selectedDate) {
-      const dateStr = selectedDate.toISOString().split('T')[0];
-      if (!blockedDates.includes(dateStr)) {
-        const newBlockedDates = [...blockedDates, dateStr];
-        onBlockedDatesUpdate(newBlockedDates);
-      }
-      setSelectedDate(null);
+  // Remove a minimum nights rule
+  const handleRemoveMinNightsRule = async (index) => {
+    try {
+      await axios.post('http://localhost:5001/api/remove-min-nights-rule', { index });
+      setMinNightsRules(prev => prev.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error("Error removing minimum nights rule:", error);
     }
   };
 
-  const handleUnblockDate = () => {
-    if (selectedDate) {
-      const dateStr = selectedDate.toISOString().split('T')[0];
-      const newBlockedDates = blockedDates.filter(date => date !== dateStr);
-      onBlockedDatesUpdate(newBlockedDates);
-      setSelectedDate(null);
+  // Utility function to generate date range
+  const getDateRange = (start, end) => {
+    let dates = [];
+    let currentDate = new Date(start);
+    const endDate = new Date(end);
+
+    while (currentDate <= endDate) {
+      dates.push(currentDate.toISOString().split('T')[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
     }
+
+    return dates;
   };
 
-  const handleUnblockDateRange = () => {
-    if (blockStartDate && blockEndDate) {
-      let currentDate = new Date(blockStartDate);
-      const endDate = new Date(blockEndDate);
-      const newBlockedDates = [...blockedDates];
-      
-      while (currentDate <= endDate) {
-        const dateStr = currentDate.toISOString().split('T')[0];
-        const index = newBlockedDates.indexOf(dateStr);
-        if (index !== -1) {
-          newBlockedDates.splice(index, 1);
-        }
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-      
-      onBlockedDatesUpdate(newBlockedDates);
-      setBlockStartDate(null);
-      setBlockEndDate(null);
-    }
-  };
-
-  const renderDatePrice = (date) => {
-    const dateStr = date.toISOString().split('T')[0];
-    const price = prices[dateStr];
-    return price ? `€${price}` : '';
-  };
-
-  // Get the current price (most common price in the prices object)
+  // Get the most frequent price
   const getCurrentPrice = () => {
     const priceValues = Object.values(prices);
     if (priceValues.length === 0) return null;
-    
+
     const priceCounts = {};
     let maxCount = 0;
     let currentPrice = null;
@@ -169,6 +158,21 @@ const AdminCalendar = ({
     return currentPrice;
   };
 
+  // Display price for a date in the calendar
+  const renderDatePrice = (date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    return prices[dateStr] ? `€${prices[dateStr]}` : '';
+  };
+
+  // Unblock a single date
+  const handleUnblockDate = async (date) => {
+    try {
+      await axios.post('http://localhost:5001/api/unblock-date', { date });
+      setBlockedDates(prev => prev.filter(d => d !== date));
+    } catch (error) {
+      console.error("Error unblocking date:", error);
+    }
+  };
   return (
 <div className="admin-booking-container">
   <div className="admin-calendar">
@@ -324,9 +328,10 @@ const AdminCalendar = ({
               {blockedDates.map(date => (
                 <li key={date} className="admin-list-item">
                   <span>{date}</span>
-                  <button onClick={() => onBlockedDatesUpdate(blockedDates.filter(d => d !== date))} className="admin-button-danger">
+                  <button onClick={() => handleUnblockDate(date)} className="admin-button-danger">
                     Débloquer
                   </button>
+
                 </li>
               ))}
             </ul>
@@ -357,17 +362,5 @@ const AdminCalendar = ({
   );
 };
 
-AdminCalendar.propTypes = {
-  prices: PropTypes.objectOf(PropTypes.number).isRequired,
-  blockedDates: PropTypes.arrayOf(PropTypes.string).isRequired,
-  minNightsRules: PropTypes.arrayOf(PropTypes.shape({
-    startDate: PropTypes.string.isRequired,
-    endDate: PropTypes.string.isRequired,
-    minNights: PropTypes.number.isRequired
-  })).isRequired,
-  onPriceUpdate: PropTypes.func.isRequired,
-  onBlockedDatesUpdate: PropTypes.func.isRequired,
-  onMinNightsUpdate: PropTypes.func.isRequired
-};
 
 export default AdminCalendar;
