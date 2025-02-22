@@ -210,7 +210,6 @@ export const Home = () => {
                 <button className='EnSavoirPlusBtn'>EN SAVOIR PLUS</button>
             </a>
         </div>
-            <Footer />
     </div>
   )
 }

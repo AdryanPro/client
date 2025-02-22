@@ -3,12 +3,16 @@ import DatePicker from 'react-datepicker';
 import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css";
 import "../CSS/AdminCalendar.css";
+import NavBar from './LayoutComponents/NavBar';
 
 const AdminCalendar = () => {
   // State for storing fetched data
   const [prices, setPrices] = useState({});
   const [blockedDates, setBlockedDates] = useState([]);
   const [minNightsRules, setMinNightsRules] = useState([]);
+  const [priceStartDate, setPriceStartDate] = useState(null);
+  const [priceEndDate, setPriceEndDate] = useState(null);
+  const [rangePrice, setRangePrice] = useState('');
 
   // State for form inputs
   const [selectedDate, setSelectedDate] = useState(null);
@@ -20,6 +24,7 @@ const AdminCalendar = () => {
   const [minNightsEndDate, setMinNightsEndDate] = useState(null);
   const [minNights, setMinNights] = useState('');
 
+
   // Fetch initial data from backend
   useEffect(() => {
     const fetchCalendarData = async () => {
@@ -28,47 +33,106 @@ const AdminCalendar = () => {
         setPrices(response.data.prices || {});
         setBlockedDates(response.data.blockedDates || []);
         setMinNightsRules(response.data.minNightsRules || []);
+        setBasePrice(response.data.basePrice || ""); // Fetch base price
       } catch (error) {
         console.error("Error fetching calendar data:", error);
       }
     };
     fetchCalendarData();
-  }, []);
+  }, [selectedDate, prices, basePrice]); // ✅ Ensures re-fetching when prices update
+  
 
-  // Update price for a specific date
-  const handleSetPrice = async () => {
-    if (!selectedDate || !price) return;
+  // Update price for a specific range of dates
+  const handleSetRangePrice = async () => {
+    if (!priceStartDate || !priceEndDate || !rangePrice) return;
+  
+    const startStr = priceStartDate.toISOString().split('T')[0];
+    const endStr = priceEndDate.toISOString().split('T')[0];
+    const dateRange = getDateRange(priceStartDate, priceEndDate);
+  
     try {
-      const dateStr = selectedDate.toISOString().split('T')[0];
-      await axios.post('http://localhost:5001/api/update-price', { date: dateStr, newPrice: price });
-      setPrices(prev => ({ ...prev, [dateStr]: price }));
-      setSelectedDate(null);
-      setPrice('');
+      await axios.post('http://localhost:5001/api/update-price-range', {
+        startDate: startStr,
+        endDate: endStr,
+        newPrice: rangePrice,
+      });
+  
+      // ✅ Ensure all selected dates get the new price
+      setPrices(prev => {
+        const updatedPrices = { ...prev };
+        dateRange.forEach(date => {
+          updatedPrices[date] = rangePrice;
+        });
+        return updatedPrices;
+      });
+  
+      // ✅ Clear inputs after updating
+      setPriceStartDate(null);
+      setPriceEndDate(null);
+      setRangePrice('');
     } catch (error) {
-      console.error("Error updating price:", error);
+      console.error("Error updating price range:", error);
     }
   };
+  
+  
 
   // Set base price for all future dates
   const handleSetBasePrice = async () => {
     if (!basePrice) return;
     try {
       await axios.post('http://localhost:5001/api/set-base-price', { basePrice });
+  
+      // ✅ Ensure the new base price updates the prices state
+      setPrices(prev => {
+        let updatedPrices = { ...prev };
+        Object.keys(updatedPrices).forEach(date => {
+          updatedPrices[date] = parseFloat(basePrice);
+        });
+        return updatedPrices;
+      });
+  
+      // ✅ Store the new base price separately
+      setPrices(prev => ({ ...prev, basePrice: parseFloat(basePrice) }));
+  
+      // ✅ Clear the input field after updating
       setBasePrice('');
     } catch (error) {
       console.error("Error setting base price:", error);
     }
   };
 
+  // Utility function to generate date range
+  const getDateRange = (start, end) => {
+    let dates = [];
+    let currentDate = new Date(start);
+    const endDate = new Date(end);
+  
+    while (currentDate <= endDate) {
+      dates.push(currentDate.toISOString().split('T')[0]); // Convert to string format
+      currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+    }
+  
+    return dates;
+  };
+
   // Block a date range
   const handleBlockDateRange = async () => {
     if (!blockStartDate || !blockEndDate) return;
+  
     try {
+      // Generate all dates in the range
+      const dateRange = getDateRange(blockStartDate, blockEndDate);
+  
+      // Send the full list of blocked dates to the backend
       await axios.post('http://localhost:5001/api/block-dates', {
-        startDate: blockStartDate.toISOString().split('T')[0],
-        endDate: blockEndDate.toISOString().split('T')[0],
+        dates: dateRange, 
       });
-      setBlockedDates(prev => [...prev, ...getDateRange(blockStartDate, blockEndDate)]);
+  
+      // Update the state with all blocked dates
+      setBlockedDates(prev => [...new Set([...prev, ...dateRange])]);
+  
+      // Clear input fields
       setBlockStartDate(null);
       setBlockEndDate(null);
     } catch (error) {
@@ -117,64 +181,93 @@ const AdminCalendar = () => {
   // Remove a minimum nights rule
   const handleRemoveMinNightsRule = async (index) => {
     try {
-      await axios.post('http://localhost:5001/api/remove-min-nights-rule', { index });
-      setMinNightsRules(prev => prev.filter((_, i) => i !== index));
+        const response = await axios.delete(`http://localhost:5001/api/remove-min-nights-rule/${index}`);
+        
+        // ✅ Update state to reflect the removed rule
+        setMinNightsRules(response.data.minNightsRules);
     } catch (error) {
-      console.error("Error removing minimum nights rule:", error);
+        console.error("Error removing minimum nights rule:", error);
     }
-  };
-
-  // Utility function to generate date range
-  const getDateRange = (start, end) => {
-    let dates = [];
-    let currentDate = new Date(start);
-    const endDate = new Date(end);
-
-    while (currentDate <= endDate) {
-      dates.push(currentDate.toISOString().split('T')[0]);
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    return dates;
-  };
+};
 
   // Get the most frequent price
   const getCurrentPrice = () => {
-    const priceValues = Object.values(prices);
-    if (priceValues.length === 0) return null;
-
-    const priceCounts = {};
-    let maxCount = 0;
-    let currentPrice = null;
-
-    priceValues.forEach(price => {
-      priceCounts[price] = (priceCounts[price] || 0) + 1;
-      if (priceCounts[price] > maxCount) {
-        maxCount = priceCounts[price];
-        currentPrice = price;
-      }
-    });
-
-    return currentPrice;
+    if (!prices || Object.keys(prices).length === 0) return 'Aucun prix défini';
+  
+    // ✅ Check if a base price exists and return it
+    if (basePrice) {
+      return `${basePrice}`; // €
+    }
+  
+    // ✅ If no base price, get the most common price from stored prices
+    const priceValues = Object.values(prices).filter((price) => price !== basePrice);
+    if (priceValues.length === 0) return 'Aucun prix défini';
+  
+    const priceCounts = priceValues.reduce((acc, price) => {
+      acc[price] = (acc[price] || 0) + 1;
+      return acc;
+    }, {});
+  
+    // ✅ Get the most frequent price
+    const mostFrequentPrice = Object.keys(priceCounts).reduce((a, b) =>
+      priceCounts[a] > priceCounts[b] ? a : b
+    );
+  
+    return `${mostFrequentPrice}`; // €
   };
+  
+  
+  
 
   // Display price for a date in the calendar
   const renderDatePrice = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
+  
     const dateStr = date.toISOString().split('T')[0];
-    return prices[dateStr] ? `€${prices[dateStr]}` : '';
+  
+    if (blockedDates.includes(dateStr)) return ''; // Hide price for blocked dates
+    if (prices[dateStr]) return `${prices[dateStr]}€`; // Show set price for that day
+    return basePrice ? `${basePrice}€` : ''; // Default to base price
   };
+  
 
   // Unblock a single date
   const handleUnblockDate = async (date) => {
     try {
-      await axios.post('http://localhost:5001/api/unblock-date', { date });
-      setBlockedDates(prev => prev.filter(d => d !== date));
+        await axios.delete(`http://localhost:5001/api/unblock-date/${date}`);
+        setBlockedDates(prev => prev.filter(d => d !== date)); // Update UI
     } catch (error) {
-      console.error("Error unblocking date:", error);
+        console.error("Error unblocking date:", error);
     }
   };
+
+  //Function to remove the selected rang of dates
+  const handleRemovePrice = async (date) => {
+    const dateStr = date.toISOString().split('T')[0];
+  
+    try {
+      await axios.post('http://localhost:5001/api/remove-price', { date: dateStr });
+  
+      setPrices(prev => {
+        const updatedPrices = { ...prev };
+        delete updatedPrices[dateStr]; // ✅ Remove the custom price for that day
+  
+        return updatedPrices;
+      });
+  
+      // ✅ Refresh UI to ensure fallback to base price
+      setSelectedDate(null);
+    } catch (error) {
+      console.error("Error removing price for selected date:", error);
+    }
+  };
+  
+  
+  
   return (
 <div className="admin-booking-container">
+  <NavBar/>
   <div className="admin-calendar">
     <h2 className="admin-title">Gérer le Calendrier</h2>
 
@@ -198,38 +291,81 @@ const AdminCalendar = () => {
     </div>
 
     <div className="admin-section">
-      <h3 className="admin-subtitle">Prix par Jour</h3>
-      <div className="admin-form-group">
-        <label className="admin-form-label">Sélectionner une Date</label>
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          minDate={new Date()}
-          className="admin-form-input"
-          dayClassName={date => {
-            if (blockedDates.includes(date.toISOString().split('T')[0])) return 'blocked-date';
-            return prices[date.toISOString().split('T')[0]] ? 'has-price' : undefined;
-          }}
-          renderDayContents={(day, date) => (
-            <div className="admin-date-cell">
-              <span>{day}</span>
-              <span className="admin-price-tag">{renderDatePrice(date)}</span>
-            </div>
-          )}
-        />
-      </div>
+  <h3 className="admin-subtitle">Prix par Période</h3>
+  
+  <div className="admin-form-group">
+    <label className="admin-form-label">Sélectionner une Période</label>
+    <div className="admin-flex">
+    <DatePicker
+      selected={priceStartDate}
+      onChange={(date) => setPriceStartDate(date)}
+      selectsStart
+      startDate={priceStartDate}
+      endDate={priceEndDate}
+      minDate={new Date()} // Prevent selecting past dates
+      className="admin-form-input"
+      dayClassName={(date) => {
+        const dateStr = date.toISOString().split('T')[0];
+        if (blockedDates.includes(dateStr)) return 'blocked-day'; // Gray out blocked days
+        if (prices[dateStr]) return 'has-price'; // Highlight days with a price
+        return "";
+      }}
+      renderDayContents={(day, date) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time to compare correctly
+        if (date < today) return <span>{day}</span>; // Don't show price for past days
 
-      <div className="admin-form-group">
-        <label className="admin-form-label">Prix pour la Date Sélectionnée</label>
-        <div className="admin-flex">
+        return (
+          <div className="admin-date-cell">
+            <span>{day}</span>
+            <span className="admin-price-tag">{renderDatePrice(date)}</span>
+          </div>
+        );
+      }}
+    />
+
+
+    <DatePicker
+      selected={priceEndDate}
+      onChange={(date) => setPriceEndDate(date)}
+      selectsEnd
+      startDate={priceStartDate}
+      endDate={priceEndDate}
+      minDate={priceStartDate} // Prevent selecting past dates
+      className="admin-form-input"
+      dayClassName={(date) => {
+        const dateStr = date.toISOString().split('T')[0];
+        if (blockedDates.includes(dateStr)) return 'blocked-day'; // Gray out blocked days
+        if (prices[dateStr]) return 'has-price'; // Highlight days with a price
+        return "";
+      }}
+      renderDayContents={(day, date) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time to compare correctly
+        if (date < today) return <span>{day}</span>; // Don't show price for past days
+
+        return (
+          <div className="admin-date-cell">
+            <span>{day}</span>
+            <span className="admin-price-tag">{renderDatePrice(date)}</span>
+          </div>
+        );
+      }}
+    />
+    </div>
+  </div>
+
+  <div className="admin-form-group">
+    <label className="admin-form-label">Prix pour la Période Sélectionnée</label>
+    <div className="admin-flex">
           <input
             type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            value={rangePrice}
+            onChange={(e) => setRangePrice(e.target.value)}
             className="admin-form-input admin-price-input"
             placeholder="Entrer le prix"
           />
-          <button onClick={handleSetPrice} className="admin-button">
+          <button onClick={handleSetRangePrice} className="admin-button">
             Définir le Prix
           </button>
         </div>
@@ -246,9 +382,27 @@ const AdminCalendar = () => {
           selectsStart
           startDate={blockStartDate}
           endDate={blockEndDate}
-          minDate={new Date()}
+          minDate={new Date()} // ✅ Prevent past selections
           className="admin-form-input"
+          dayClassName={(date) => {
+            const dateStr = date.toISOString().split('T')[0];
+            if (blockedDates.includes(dateStr)) return 'blocked-day'; // Gray out blocked days
+            return "";
+          }}
+          renderDayContents={(day, date) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
+            if (date < today) return <span>{day}</span>; // ❌ Hide prices for past days
+
+            return (
+              <div className="admin-date-cell">
+                <span>{day}</span>
+                <span className="admin-price-tag">{renderDatePrice(date)}</span>
+              </div>
+            );
+          }}
         />
+
       </div>
       <div className="admin-form-group">
         <label className="admin-form-label">Date de Fin</label>
@@ -258,12 +412,30 @@ const AdminCalendar = () => {
           selectsEnd
           startDate={blockStartDate}
           endDate={blockEndDate}
-          minDate={blockStartDate}
+          minDate={blockStartDate} // ✅ Ensures logical range selection
           className="admin-form-input"
+          dayClassName={(date) => {
+            const dateStr = date.toISOString().split('T')[0];
+            if (blockedDates.includes(dateStr)) return 'blocked-day'; // Gray out blocked days
+            return "";
+          }}
+          renderDayContents={(day, date) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
+            if (date < today) return <span>{day}</span>; // ❌ Hide prices for past days
+
+            return (
+              <div className="admin-date-cell">
+                <span>{day}</span>
+                <span className="admin-price-tag">{renderDatePrice(date)}</span>
+              </div>
+            );
+          }}
         />
+
       </div>
       <div className="admin-flex">
-        <button onClick={handleBlockDateRange} className="admin-button" disabled={!blockStartDate || !blockEndDate}>
+        <button onClick={handleBlockDateRange} className="admin-button2" disabled={!blockStartDate || !blockEndDate}>
           Bloquer la Période
         </button>
       </div>
@@ -306,7 +478,7 @@ const AdminCalendar = () => {
           placeholder="Entrer le minimum de nuits"
         />
       </div>
-      <button onClick={handleSetMinNights} className="admin-button" disabled={!minNightsStartDate || !minNightsEndDate || !minNights}>
+      <button onClick={handleSetMinNights} className="admin-button2" disabled={!minNightsStartDate || !minNightsEndDate || !minNights}>
         Définir le Minimum de Nuits
       </button>
     </div>
@@ -315,11 +487,45 @@ const AdminCalendar = () => {
       <h3 className="admin-subtitle">Paramètres Actuels</h3>
       <div className="admin-grid">
         <div className="admin-form-group">
-          <h4 className="admin-small-title">Prix Actuel</h4>
-          <div className="admin-price-display">
-            {getCurrentPrice() !== null ? `€${getCurrentPrice()}` : 'Aucun prix défini'}
+          <div className="admin-form-group">
+            <h4 className="admin-small-title">Prix Actuel</h4>
+            <div className="admin-price-display">
+              {getCurrentPrice() !== null ? getCurrentPrice() : 'Aucun prix défini'}€
+            </div>
           </div>
         </div>
+
+        <div className="admin-form-group">
+  <h4 className="admin-small-title">Prix pour la Date Sélectionnée</h4>
+  <div className="admin-price-display">
+    {selectedDate ? (
+      <>
+        <span>
+          {selectedDate.toISOString().split('T')[0]} :{" "}
+          {prices[selectedDate.toISOString().split('T')[0]]
+            ? `${prices[selectedDate.toISOString().split('T')[0]]}€`
+            : basePrice
+            ? `${basePrice}€ (Prix de base)`
+            : "Aucun prix défini"}
+        </span>
+        {prices[selectedDate.toISOString().split('T')[0]] && (
+          <button
+            onClick={() => handleRemovePrice(selectedDate)}
+            className="admin-button-danger"
+            style={{ marginLeft: "10px" }}
+          >
+            Supprimer
+          </button>
+        )}
+      </>
+    ) : (
+      "Sélectionnez une date pour voir son prix"
+    )}
+  </div>
+</div>
+
+
+
 
         <div className="admin-form-group">
           <h4 className="admin-small-title">Dates Bloquées</h4>
