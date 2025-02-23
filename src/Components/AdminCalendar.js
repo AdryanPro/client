@@ -23,7 +23,7 @@ const AdminCalendar = () => {
   const [minNightsStartDate, setMinNightsStartDate] = useState(null);
   const [minNightsEndDate, setMinNightsEndDate] = useState(null);
   const [minNights, setMinNights] = useState('');
-
+  const [refresh, setRefresh] = useState(false);
 
   // Fetch initial data from backend
   useEffect(() => {
@@ -33,13 +33,16 @@ const AdminCalendar = () => {
         setPrices(response.data.prices || {});
         setBlockedDates(response.data.blockedDates || []);
         setMinNightsRules(response.data.minNightsRules || []);
-        setBasePrice(response.data.basePrice || ""); // Fetch base price
+        setBasePrice(response.data.basePrice || ""); 
       } catch (error) {
         console.error("Error fetching calendar data:", error);
       }
     };
     fetchCalendarData();
-  }, [selectedDate, prices, basePrice]); // ✅ Ensures re-fetching when prices update
+  }, [selectedDate, prices, refresh]); // ✅ Now refresh triggers re-fetch
+  
+  
+  
   
 
   // Update price for a specific range of dates
@@ -247,23 +250,27 @@ const AdminCalendar = () => {
     const dateStr = date.toISOString().split('T')[0];
   
     try {
-      await axios.post('http://localhost:5001/api/remove-price', { date: dateStr });
+      // 🚀 Convert to an array if handling a range
+      const datesToRemove = [dateStr]; // If handling multiple, loop over a range
   
+      // ✅ Send DELETE request
+      await axios.delete('http://localhost:5001/api/remove-price', { data: { dates: datesToRemove } });
+  
+      // 🛠 Remove from state immediately
       setPrices(prev => {
         const updatedPrices = { ...prev };
-        delete updatedPrices[dateStr]; // ✅ Remove the custom price for that day
-  
+        datesToRemove.forEach(date => delete updatedPrices[date]); // ✅ Remove all selected dates
         return updatedPrices;
       });
   
-      // ✅ Refresh UI to ensure fallback to base price
-      setSelectedDate(null);
+      // 🔄 Trigger re-fetch
+      setRefresh(prev => !prev);
+  
     } catch (error) {
       console.error("Error removing price for selected date:", error);
     }
   };
-  
-  
+
   
   return (
 <div className="admin-booking-container">
@@ -496,36 +503,25 @@ const AdminCalendar = () => {
         </div>
 
         <div className="admin-form-group">
-  <h4 className="admin-small-title">Prix pour la Date Sélectionnée</h4>
-  <div className="admin-price-display">
-    {selectedDate ? (
-      <>
-        <span>
-          {selectedDate.toISOString().split('T')[0]} :{" "}
-          {prices[selectedDate.toISOString().split('T')[0]]
-            ? `${prices[selectedDate.toISOString().split('T')[0]]}€`
-            : basePrice
-            ? `${basePrice}€ (Prix de base)`
-            : "Aucun prix défini"}
-        </span>
-        {prices[selectedDate.toISOString().split('T')[0]] && (
-          <button
-            onClick={() => handleRemovePrice(selectedDate)}
-            className="admin-button-danger"
-            style={{ marginLeft: "10px" }}
-          >
-            Supprimer
-          </button>
-        )}
-      </>
-    ) : (
-      "Sélectionnez une date pour voir son prix"
-    )}
-  </div>
-</div>
-
-
-
+          <h4 className="admin-small-title">Prix pour la Période Sélectionnée</h4>
+          <div className="admin-scroll">
+            <ul>
+              {Object.entries(prices).map(([date, price]) => (
+                <li key={date} className="admin-list-item">
+                  <span>
+                    {date} : {price}€
+                  </span>
+                  <button
+                    onClick={() => handleRemovePrice(new Date(date))} // Use handleRemovePrice to remove the price
+                    className="admin-button-danger"
+                  >
+                    Supprimer
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
         <div className="admin-form-group">
           <h4 className="admin-small-title">Dates Bloquées</h4>
