@@ -246,31 +246,27 @@ const AdminCalendar = () => {
   };
 
   //Function to remove the selected rang of dates
+
   const handleRemovePrice = async (date) => {
     const dateStr = date.toISOString().split('T')[0];
   
     try {
-      // 🚀 Convert to an array if handling a range
-      const datesToRemove = [dateStr]; // If handling multiple, loop over a range
+      await axios.post('http://localhost:5001/api/remove-price', { date: dateStr });
   
-      // ✅ Send DELETE request
-      await axios.delete('http://localhost:5001/api/remove-price', { data: { dates: datesToRemove } });
-  
-      // 🛠 Remove from state immediately
       setPrices(prev => {
         const updatedPrices = { ...prev };
-        datesToRemove.forEach(date => delete updatedPrices[date]); // ✅ Remove all selected dates
+        delete updatedPrices[dateStr]; // ✅ Remove the custom price for that day
         return updatedPrices;
       });
   
-      // 🔄 Trigger re-fetch
-      setRefresh(prev => !prev);
-  
+      setSelectedDate(null);
+      setRefresh(prev => !prev); // ✅ Triggers a re-render
     } catch (error) {
       console.error("Error removing price for selected date:", error);
     }
   };
-
+  
+  
   
   return (
 <div className="admin-booking-container">
@@ -502,26 +498,54 @@ const AdminCalendar = () => {
           </div>
         </div>
 
+
+
+
+
+
+
+
+
+
         <div className="admin-form-group">
-          <h4 className="admin-small-title">Prix pour la Période Sélectionnée</h4>
-          <div className="admin-scroll">
-            <ul>
-              {Object.entries(prices).map(([date, price]) => (
-                <li key={date} className="admin-list-item">
-                  <span>
-                    {date} : {price}€
-                  </span>
-                  <button
-                    onClick={() => handleRemovePrice(new Date(date))} // Use handleRemovePrice to remove the price
-                    className="admin-button-danger"
-                  >
-                    Supprimer
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+  <h4 className="admin-small-title">Prix pour la Date Sélectionnée</h4>
+  <div className="admin-scroll">
+    <ul>
+      {console.log("🔍 Debugging: Selected Date ->", selectedDate)}
+      {console.log("🔍 Debugging: Prices State ->", prices)}
+
+      {selectedDate && selectedDate.toISOString ? (
+        <li key={selectedDate.toISOString().split('T')[0]} className="admin-list-item">
+          <span>
+            {selectedDate.toISOString().split('T')[0]} :{" "}
+            {prices[selectedDate.toISOString().split('T')[0]]
+              ? `${prices[selectedDate.toISOString().split('T')[0]]}€`
+              : basePrice
+              ? `${basePrice}€ (Prix de base)`
+              : "Aucun prix défini"}
+          </span>
+          {prices[selectedDate.toISOString().split('T')[0]] && (
+            <button
+              onClick={() => handleRemovePrice(selectedDate)}
+              className="admin-button-danger"
+            >
+              Supprimer
+            </button>
+          )}
+        </li>
+      ) : (
+        <li className="admin-list-item">Sélectionnez une date pour voir son prix</li>
+      )}
+    </ul>
+  </div>
+</div>
+
+
+
+
+
+
+
 
         <div className="admin-form-group">
           <h4 className="admin-small-title">Dates Bloquées</h4>
