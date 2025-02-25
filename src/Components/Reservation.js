@@ -239,19 +239,19 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
       <form onSubmit={handleSubmit}>
         <div className="calendar-section">
           <div className="form-group">
-            <label className="form-label">Arrival Date</label>
+            <label className="form-label">Date d'arrivée</label>
             <DatePicker
               selected={startDate}
               onChange={(date) => {
                 setStartDate(date);
-                setEndDate(null); // ✅ Reset end date properly
+                setEndDate(null); // ✅ Réinitialiser correctement la date de départ
               }}
               selectsStart
               startDate={startDate}
               endDate={endDate}
               minDate={new Date()}
               excludeDates={blockedDates.map(date => new Date(date))}
-              className="form-input reservation-datepicker"  // ✅ Assign class to separate CSS
+              className="form-input reservation-datepicker"
               highlightDates={[{
                 "react-datepicker__day--range-start": [startDate],
                 "react-datepicker__day--in-range": [startDate, endDate],
@@ -260,11 +260,11 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
               dayClassName={date => {
                 const dateStr = date.toISOString().split('T')[0];
 
-                if (date < new Date()) return ''; // ✅ No price for past days
+                if (date < new Date()) return ''; // ✅ Pas de prix pour les jours passés
                 if (isDateBlocked(date)) return 'blocked-date';
                 if (prices[dateStr]) return 'has-price';
                 if (basePrice) return 'base-price';
-                
+
                 return '';
               }}
               renderDayContents={(day, date) => (
@@ -276,19 +276,19 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
             />
           </div>
           <div className="form-group">
-            <label className="form-label">Departure Date</label>
+            <label className="form-label">Date de départ</label>
             <DatePicker
               selected={endDate}
               onChange={date => {
-                if (!startDate) return; // ✅ Prevent selecting end date first
+                if (!startDate) return; // ✅ Empêcher la sélection de la date de départ en premier
                 setEndDate(date);
               }}
               selectsEnd
               startDate={startDate}
               endDate={endDate}
-              minDate={startDate} // ✅ Ensure logical selection
+              minDate={startDate} // ✅ Assurer une sélection logique
               excludeDates={blockedDates.map(date => new Date(date))}
-              className="form-input reservation-datepicker"  // ✅ Separate CSS
+              className="form-input reservation-datepicker"
               highlightDates={[{
                 "react-datepicker__day--range-start": [startDate],
                 "react-datepicker__day--in-range": [startDate, endDate],
@@ -297,11 +297,11 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
               dayClassName={date => {
                 const dateStr = date.toISOString().split('T')[0];
 
-                if (date < new Date()) return ''; // ✅ No price for past days
+                if (date < new Date()) return ''; // ✅ Pas de prix pour les jours passés
                 if (isDateBlocked(date)) return 'blocked-date';
                 if (prices[dateStr]) return 'has-price';
                 if (basePrice) return 'base-price';
-                
+
                 return '';
               }}
               renderDayContents={(day, date) => (
@@ -311,17 +311,13 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
                 </div>
               )}
             />
-
-
-
-
           </div>
           {error && <div className="error-message">{error}</div>}
         </div>
 
         <div className="form-section">
           <div className="form-group">
-            <label className="form-label">Number of Adults (max 10)</label>
+            <label className="form-label">Nombre d'adultes (max 10)</label>
             <input
               type="number"
               min="1"
@@ -333,7 +329,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Number of Children (max 10)</label>
+            <label className="form-label">Nombre d'enfants (max 10)</label>
             <input
               type="number"
               min="0"
@@ -345,7 +341,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Number of Babies</label>
+            <label className="form-label">Nombre de bébés</label>
             <input
               type="number"
               min="0"
@@ -356,7 +352,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Number of Pets (max 5)</label>
+            <label className="form-label">Nombre d'animaux (max 5)</label>
             <input
               type="number"
               min="0"
@@ -368,7 +364,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Last Name</label>
+            <label className="form-label">Nom de famille</label>
             <input
               type="text"
               value={lastName}
@@ -379,7 +375,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">First Name</label>
+            <label className="form-label">Prénom</label>
             <input
               type="text"
               value={firstName}
@@ -390,7 +386,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Phone Number</label>
+            <label className="form-label">Numéro de téléphone</label>
             <input
               type="tel"
               value={phone}
@@ -401,7 +397,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Email</label>
+            <label className="form-label">Adresse e-mail</label>
             <input
               type="email"
               value={email}
@@ -412,7 +408,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Additional Options</label>
+            <label className="form-label">Options supplémentaires</label>
             <div className="options-grid">
               {Object.entries(options).map(([key, option]) => (
                 <label key={key} className="option-item">
@@ -430,28 +426,30 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group total-price-container">
-            <h4 className="total-price-title">Total Amount :</h4>
+            <h4 className="total-price-title">Montant total :</h4>
             <div className="total-price-display">
-              {calculateTotalPrice() > 0 ? `${calculateTotalPrice()}€` : "Select dates to see total"}
+              {calculateTotalPrice() > 0 ? `${calculateTotalPrice()}€` : "Sélectionnez des dates pour voir le total"}
             </div>
           </div>
 
           <button type="submit" className="submit-button">
-            Make Reservation
+            Réserver
           </button>
         </div>
       </form>
-      {/* ✅ Pop-up confirmation message */}
+
+      {/* ✅ Pop-up de confirmation */}
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-content">
-            <h2>Merci pour votre réservation!</h2>
+            <h2>Merci pour votre réservation !</h2>
             <p>Vous serez contacté dans les plus brefs délais pour confirmer celle-ci ainsi que pour procéder au paiement.</p>
             <button onClick={() => window.location.href = '/'}>OK</button>
           </div>
         </div>
       )}
     </div>
+
   );
 };
 

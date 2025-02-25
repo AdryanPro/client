@@ -33,28 +33,30 @@ export const Contact = () => {
   };
 
   return (
-    <div>
-      <NavBar />
-          <div className='ContactWrapper'>
+  <div>
+    <NavBar />
+    <div className='ContactWrapper'>
       <form className='Form' onSubmit={onSubmit}>
-        <h2 className='FormH2'>Contact form</h2>
+        <h2 className='FormH2'>Formulaire de contact</h2>
+
         <div className="input-box">
-          <label>Full name</label>
-          <input type="text" className='Field' placeholder='Enter your name' name='name' required />
+          <label>Nom complet</label>
+          <input type="text" className='Field' placeholder='Entrez votre nom' name='name' required />
         </div>
 
         <div className="input-box">
-          <label>Email Adress</label>
-          <input type="email" className='Field' placeholder='Enter your Email' name='email' required />
+          <label>E-mail</label>
+          <input type="email" className='Field' placeholder='Entrez votre e-mail' name='email' required />
         </div>
 
         <div className="input-box">
-          <label>Your Message</label>
-          <textarea className='Field Message' placeholder='Enter your message' name='message' required />
+          <label>Votre message</label>
+          <textarea className='Field Message' placeholder='Entrez votre message' name='message' required />
         </div>
-        <button type='submit'>Send your messsage</button>
+
+        <button type='submit'>Envoyer votre message</button>
       </form>
     </div>
-    </div> 
+  </div>
   )
 }

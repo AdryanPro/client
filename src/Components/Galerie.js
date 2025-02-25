@@ -493,7 +493,6 @@ export const Galerie = () => {
           );
         })}
       </div>
-      <Footer />
     </div>
   );
 };
