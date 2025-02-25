@@ -56,7 +56,7 @@ export default function NavBar() {
             </div>
             <div className="menu-items">
               <a href="/" className="menu-item">Home</a>
-              <a href="/services" className="menu-item">Services</a>
+              <a href="/Reservation" className="menu-item">Reservation</a>
               <a href="/contact" className="menu-item">Contact</a>
             </div>
           </div>

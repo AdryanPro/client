@@ -55,7 +55,6 @@ export const Contact = () => {
         <button type='submit'>Send your messsage</button>
       </form>
     </div>
-    <Footer />
     </div> 
   )
 }
