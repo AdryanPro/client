@@ -1,142 +1,127 @@
-.gallery {
-    min-height: 100vh;
-    background-color: rgb(249, 250, 251);
-    padding: 3rem 1rem;
+/* ===== General Styling ===== */
+.gallery-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.gallery-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* ===== Section Styling ===== */
+.carousel-sectionGaleriePage {
+  margin-bottom: 50px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* ===== Carousel Wrapper ===== */
+.carouselGaleriePage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 80vw;
+  margin: 0 auto;
+}
+
+/* ===== Image Container (Updated) ===== */
+.carousel-contentGaleriePage {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Enforce Same Width & Height for Images */
+.carousel-image-wrapperGaleriePage {
+  width: 100%; /* ✅ Image takes full width of parent */
+  height: 400px; /* ✅ Set a fixed height */
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+/* Image Styling */
+.carousel-imageGaleriePage {
+  width: 100%; /* ✅ Full width */
+  height: 100%; /* ✅ Full height */
+  object-fit: cover; /* Ensures consistent size */
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* ===== Responsive Layout (Updated) ===== */
+@media (min-width: 1981px) {
+  .carousel-image-wrapperGaleriePage {
+    width: calc(33.33% - 10px); /* ✅ 3 images per row */
   }
-  
-  .gallery h1 {
-    font-size: 2.25rem;
-    font-weight: 700;
-    color: rgb(17, 24, 39);
-    text-align: center;
-    margin-bottom: 3rem;
+}
+
+@media (min-width: 1201px) and (max-width: 1980px) {
+  .carousel-image-wrapperGaleriePage {
+    width: calc(50% - 10px); /* ✅ 2 images per row */
   }
-  
-  .carousel-section {
-    margin-bottom: 4rem;
-    width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .carousel-image-wrapperGaleriePage {
+    width: 100%; /* ✅ 1 image per row */
   }
-  
-  .carousel-section h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: rgb(31, 41, 55);
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  .carousel-container {
-    position: relative;
-    margin: 0 auto;
-    overflow: hidden;
-    padding: 0 1rem;
-    max-width: 1200px;
-  }
-  
-  .carousel-track {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .carousel-slides {
-    display: flex;
-    will-change: transform;
-  }
-  
-  .slide {
-    flex-shrink: 0;
-    padding: 0 0.5rem;
-    box-sizing: border-box;
-  }
-  
-  .slide-content {
-    transition: all 0.3s;
-    position: relative;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    aspect-ratio: 16/9;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-  
-  .slide-content.hovered {
-    transform: scale(1.05);
-    z-index: 10;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .slide-content img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 0.5rem;
-  }
-  
-  .nav-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 0.75rem;
-    border-radius: 9999px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s;
-    z-index: 20;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .nav-button:hover {
-    background-color: white;
-    transform: translateY(-50%) scale(1.1);
-  }
-  
-  .nav-button.prev {
-    left: 1rem;
-  }
-  
-  .nav-button.next {
-    right: 1rem;
-  }
-  
-  .nav-button svg {
-    width: 1.5rem;
-    height: 1.5rem;
-    color: rgb(31, 41, 55);
-  }
-  
-  .dots {
-    position: absolute;
-    bottom: -2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  .dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 9999px;
-    background-color: rgb(209, 213, 219);
-    transition: background-color 0.3s;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-  }
-  
-  .dot.active {
-    background-color: rgb(31, 41, 55);
-  }
-  
-  @media (min-width: 768px) {
-    .gallery {
-      padding: 3rem 4rem;
-    }
-    
-    .carousel-container {
-      padding: 0 2rem;
-    }
-  }
+}
+
+/* ===== Navigation Buttons ===== */
+.carousel-buttonGaleriePage {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s ease-in-out;
+}
+
+.carousel-buttonGaleriePage.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.carousel-buttonGaleriePage:hover:not(.disabled) {
+  background: #0056b3;
+}
+
+/* ===== Image Overlay (Text & Gray Filter) ===== */
+.image-overlayGaleriePage {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* ✅ Fully covers image */
+  background: rgba(0, 0, 0, 0.5); /* ✅ Gray filter */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.carousel-image-wrapperGaleriePage:hover .image-overlayGaleriePage {
+  opacity: 1;
+}
+
+/* On Hover: Add grayscale effect & scale */
+.carousel-image-wrapperGaleriePage:hover img {
+  filter: grayscale(60%);
+  transform: scale(1.02);
+}

@@ -119,6 +119,10 @@ export const Home = () => {
                     dans une campagne valonnée et verdoyante,surplombant 
                     la sinueuse rivière qu’est la Mayenne.
                 </p>
+                <div className="bg-blue-500 text-blue p-4 rounded-lg">
+                  🎉 Tailwind is working!
+                </div>
+                
                 <Link to={'/Reservation'}>
                     <button className="reserveCampagneMayenne">Réserver</button>
                 </Link>
@@ -136,9 +140,9 @@ export const Home = () => {
                 <Link to={'/Galerie'}>
                   <button className="galerieBtn">Galerie</button>
                 </Link>
-                <Link to={'/'}>
+                {/* <Link to={'/'}>
                   <button className="galerieBtn">A Propos</button>
-                </Link>
+                </Link> */}
             </div>
             <img src={NotreMaisonImg} alt='La masion vue de deriere' className='NotreMaisonImg'/>
         </div>

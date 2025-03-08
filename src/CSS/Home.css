@@ -160,6 +160,10 @@
   margin-left: 8%;
   /* margin-right: 8%; */
   font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 .NotreMaisonH1{
   font-size: 4.4rem;
@@ -177,6 +181,11 @@
   margin-top: 12%;
   margin-right: 8%;
 }
+/* .btnGalerieWrapperOnHomePage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
 .galerieBtn{
   width: 247px;
   height: 86px;
@@ -186,7 +195,6 @@
   border-radius: 4px;
   border: 4px;
   margin: 8% 9% 0 0%; 
-
   background-color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
   transition: background-color 0.3s ease;

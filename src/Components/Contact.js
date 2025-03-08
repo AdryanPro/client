@@ -1,7 +1,6 @@
 import React from 'react'
 import '../CSS/Contact.css'
 import Swal from 'sweetalert2'
-import Footer from './LayoutComponents/Footer';
 import NavBar from './LayoutComponents/NavBar';
 
 export const Contact = () => {
