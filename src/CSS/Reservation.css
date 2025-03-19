@@ -273,14 +273,14 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .resaForm {
-    min-width: 90vw;
-    max-width: 95vw;
+    min-width: 96vw;
+    max-width: 96vw;
   }
   .titleResaWrapper{
     font-size: 2rem;
   }
   .submit-button-resa {
-    width: 100%;
+    width: 50%;
   }
 }
 
