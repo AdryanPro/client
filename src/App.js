@@ -133,7 +133,7 @@ function App() {
       </Routes>
 
       {/* Footer with Admin Switch */}
-      {/* <Footer isAdmin={isAdmin} handleAdminSwitch={handleAdminSwitch} /> */}
+      <Footer isAdmin={isAdmin} handleAdminSwitch={handleAdminSwitch} />
     </div>
   );
 }
