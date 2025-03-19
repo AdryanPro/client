@@ -625,7 +625,7 @@ body{
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 120vh;
+        min-height: 100vh;
       }
 
       .carousel-container{
@@ -640,7 +640,7 @@ body{
       .dot {
       width: 3px;
       height: 5px;
-    }
+      }
       .nav-button.prev{
         left: -18px !important;
       }
@@ -648,7 +648,13 @@ body{
         right: -18px !important;
       }
       .buttonWrapperRegion{
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 0;
       }
+      /* .buttonWrapperRegion{
+        display: block;
+      } */
     }
   
