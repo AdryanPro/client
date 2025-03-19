@@ -1,66 +1,77 @@
-.ContactWrapper{
+/* Contact.css */
+.ContactWrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    color: #fff !important;
-}
-
-form{
-    max-width: 600px;
-    width: 100%;
-    background-color: #61A2A7;
-    padding: 25px 25px 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    color: #fff;
-    margin: 25px;
-}
-form h2{
-    font-size: 30px;
-    text-align: center;
-}
-form .input-box{
-    margin-top: 20px;
-}
-input::placeholder {
-    color: rgb(255, 255, 255);
+    min-height: 80vh;
+    background-color: #f9f9f9;
+    padding: 20px;
   }
-.input-box .Field{
-    width: 95%;
-    height: 24%;
-    background: transparent;
-    border: 2px solid #ddd;
-    outline: none;
-    border-radius: 6px;
-    padding: 15px;
-    font-size: 16px;
-    color: #fff;
-    margin-top: 8px;
-}
-
-.input-box .Field.Message{
-    height: 200px;
-    resize: none;
-}
-.Message::placeholder{
-    color: #fff;
-}
-form button{
-    width: 90%;
-    height: 55px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border: none;
-    border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    cursor: pointer;
-    font-size: 16px;
-    color: #fff;
+  
+  .FormContact {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .FormH2Contact {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .input-boxContact {
+    margin-bottom: 20px;
+  }
+  
+  .LabelContact {
+    display: block;
+    font-size: 14px;
     font-weight: 500;
-    margin: 25px 0px 0px  4%;
-}
-
-form button:hover{
-    font-size: 1.3rem;
-    background-color: rgba(255, 255, 255, 0.6)
-}
+    color: #555;
+    margin-bottom: 8px;
+  }
+  
+  .FieldContact {
+    width: 95%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+  }
+  
+  .FieldContact:focus {
+    border-color: #61A2A7;
+    outline: none;
+    background-color: #fff;
+  }
+  
+  .MessageContact {
+    resize: vertical;
+    min-height: 120px;
+  }
+  
+  .SubmitButtonContact {
+    width: 100%;
+    padding: 12px;
+    background-color: #61A2A7;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .SubmitButtonContact:hover {
+    background-color: #4D8E93;
+  }

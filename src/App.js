@@ -5,7 +5,7 @@ import { Galerie } from "./Components/Galerie";
 import { Contact } from "./Components/Contact";
 import AdminCalendar from './Components/AdminCalendar';
 import React, { useState } from "react";
-import "./CSS/Reservation.css";
+import "./CSS/popupAdmin.css";
 import APropos from "./Components/APropos";
 import Footer from "./Components/LayoutComponents/Footer";
 
@@ -58,31 +58,31 @@ function App() {
     <div className="min-h-screen bg-gray-100">
       {/* Admin Password Prompt */}
       {showPasswordPrompt && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-            <div className="flex items-center gap-2 mb-4">
-              <h2 className="text-xl font-bold">Admin Access</h2>
+        <div className="admin-popup-overlay">
+          <div className="admin-popup-container">
+            <div className="admin-popup-header">
+              <h2 className="admin-popup-title">Admin Access</h2>
             </div>
-            <form onSubmit={handlePasswordSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+            <form onSubmit={handlePasswordSubmit} className="admin-popup-form">
+              <div className="admin-popup-form-group">
+                <label className="admin-popup-label">
                   Enter Admin Password
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="admin-popup-input"
                   placeholder="Password"
                 />
                 {passwordError && (
-                  <p className="mt-1 text-sm text-red-600">{passwordError}</p>
+                  <p className="admin-popup-error">{passwordError}</p>
                 )}
               </div>
-              <div className="flex gap-2">
+              <div className="admin-popup-buttons">
                 <button
                   type="submit"
-                  className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  className="admin-popup-button admin-popup-button-login"
                 >
                   Login
                 </button>
@@ -93,7 +93,7 @@ function App() {
                     setPassword('');
                     setPasswordError('');
                   }}
-                  className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                  className="admin-popup-button admin-popup-button-cancel"
                 >
                   Cancel
                 </button>

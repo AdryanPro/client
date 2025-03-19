@@ -1,6 +1,6 @@
-import React from 'react'
-import '../CSS/Contact.css'
-import Swal from 'sweetalert2'
+import React from 'react';
+import '../CSS/Contact.css';
+import Swal from 'sweetalert2';
 import NavBar from './LayoutComponents/NavBar';
 
 export const Contact = () => {
@@ -32,30 +32,30 @@ export const Contact = () => {
   };
 
   return (
-  <div>
-    <NavBar />
-    <div className='ContactWrapper'>
-      <form className='Form' onSubmit={onSubmit}>
-        <h2 className='FormH2'>Formulaire de contact</h2>
+    <div>
+      <NavBar />
+      <div className='ContactWrapper'>
+        <form className='FormContact' onSubmit={onSubmit}>
+          <h2 className='FormH2Contact'>Formulaire de contact</h2>
 
-        <div className="input-box">
-          <label>Nom complet</label>
-          <input type="text" className='Field' placeholder='Entrez votre nom' name='name' required />
-        </div>
+          <div className="input-boxContact">
+            <label className='LabelContact'>Nom complet</label>
+            <input type="text" className='FieldContact' placeholder='Entrez votre nom' name='name' required />
+          </div>
 
-        <div className="input-box">
-          <label>E-mail</label>
-          <input type="email" className='Field' placeholder='Entrez votre e-mail' name='email' required />
-        </div>
+          <div className="input-boxContact">
+            <label className='LabelContact'>E-mail</label>
+            <input type="email" className='FieldContact' placeholder='Entrez votre e-mail' name='email' required />
+          </div>
 
-        <div className="input-box">
-          <label>Votre message</label>
-          <textarea className='Field Message' placeholder='Entrez votre message' name='message' required />
-        </div>
+          <div className="input-boxContact">
+            <label className='LabelContact'>Votre message</label>
+            <textarea className='FieldContact MessageContact' placeholder='Entrez votre message' name='message' required />
+          </div>
 
-        <button type='submit'>Envoyer votre message</button>
-      </form>
+          <button type='submit' className='SubmitButtonContact'>Envoyer votre message</button>
+        </form>
+      </div>
     </div>
-  </div>
-  )
+  );
 }

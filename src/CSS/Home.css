@@ -629,6 +629,7 @@ body{
 
       .carousel-container{
         max-width: 88vw;
+        max-height: 68vw;
         margin-inline: 6vw;
         display: flex;
         justify-content: center;

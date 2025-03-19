@@ -1,0 +1,108 @@
+/* CSS pour la popup d'administration */
+.admin-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Valeur très élevée pour être au-dessus de tout */
+  }
+  
+  .admin-popup-container {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    animation: popIn 0.3s ease-out;
+  }
+  
+  @keyframes popIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .admin-popup-header {
+    margin-bottom: 20px;
+  }
+  
+  .admin-popup-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .admin-popup-form-group {
+    margin-bottom: 20px;
+  }
+  
+  .admin-popup-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .admin-popup-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .admin-popup-input:focus {
+    outline: none;
+    border-color: #61A2A7;
+    box-shadow: 0 0 0 2px rgba(97, 162, 167, 0.2);
+  }
+  
+  .admin-popup-error {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+  }
+  
+  .admin-popup-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .admin-popup-button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .admin-popup-button-login {
+    background-color: #61A2A7;
+    color: white;
+  }
+  
+  .admin-popup-button-login:hover {
+    background-color: #4e8a8f;
+  }
+  
+  .admin-popup-button-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .admin-popup-button-cancel:hover {
+    background-color: #d0d0d0;
+  }

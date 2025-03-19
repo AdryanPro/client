@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import "../CSS/Reservation.css"
-import { useEffect } from 'react';
+import "../CSS/Reservation.css";
 import axios from 'axios';
 import NavBar from './LayoutComponents/NavBar';
 import emailjs from "@emailjs/browser";
@@ -34,8 +33,8 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     lo: { selected: false, price: 50 },
     momom: { selected: false, price: 25 },
   });
-  const [showPopup, setShowPopup] = useState(false); // ✅ Pop-up state
-  
+  const [showPopup, setShowPopup] = useState(false);
+
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
@@ -43,7 +42,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
         setFetchedPrices(response.data.prices || {});
         setFetchedBlockedDates(response.data.blockedDates || []);
         setFetchedMinNightsRules(response.data.minNightsRules || []);
-        setBasePrice(response.data.basePrice || null);  // ✅ Store base price
+        setBasePrice(response.data.basePrice || null);
       } catch (error) {
         console.error("Error fetching reservation data:", error);
       }
@@ -53,7 +52,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
   }, []);
   
   useEffect(() => {
-    emailjs.init("36MiKWV_lUwSwuvhj"); // ✅ Initialize EmailJS
+    emailjs.init("36MiKWV_lUwSwuvhj");
   }, []);
   
   const handleStartDateChange = (date) => {
@@ -83,17 +82,17 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     };
   
     const selectedRange = getDateRange(startDate, date);
-  
-    // ❌ If any blocked date is in the range, prevent selection
-    const hasBlockedDate = selectedRange.some(date => blockedDates.includes(date));
-  
+
+    // If any blocked date is in the range, prevent selection
+    const hasBlockedDate = selectedRange.some(date => fetchedBlockedDates.includes(date));
+
     if (hasBlockedDate) {
       setError('You cannot select a range that includes blocked dates.');
       return;
     }
   
-    // ✅ Apply minimum nights rule
-    const applicableRule = minNightsRules.find(rule =>
+    // Apply minimum nights rule
+    const applicableRule = fetchedMinNightsRules.find(rule =>
       rule.startDate <= startDateStr && rule.endDate >= startDateStr
     );
   
@@ -160,11 +159,11 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     };
   
     try {
-      // ✅ Send emails
-      await emailjs.send('service_n26skoe', 'template_dubm5ow', { ...emailParams, to_email: email }); //Send to client
-      await emailjs.send('service_n26skoe', 'template_gkwsk49', { ...emailParams, to_email: 'your-business-email@example.com' }); //Send to owner
+      // Send emails
+      await emailjs.send('service_n26skoe', 'template_dubm5ow', { ...emailParams, to_email: email }); // Send to client
+      await emailjs.send('service_n26skoe', 'template_gkwsk49', { ...emailParams, to_email: 'your-business-email@example.com' }); // Send to owner
   
-      // ✅ Show pop-up
+      // Show pop-up
       setShowPopup(true);
   
     } catch (error) {
@@ -178,23 +177,22 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     return fetchedBlockedDates.includes(dateStr);
   };
   
-
   const renderDatePrice = (date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
     
     const dateStr = date.toISOString().split('T')[0];
   
-    // ❌ Don't show price for past days
+    // Don't show price for past days
     if (date < today) return '';
   
-    if (isDateBlocked(date)) return ''; // ❌ Hide price for blocked dates
+    if (isDateBlocked(date)) return ''; // Hide price for blocked dates
   
-    if (prices[dateStr]) {
-      return `${prices[dateStr]}€`;  // ✅ Show specific price for that day
+    if (fetchedPrices[dateStr]) {
+      return `${fetchedPrices[dateStr]}€`;  // Show specific price for that day
     }
   
-    return basePrice ? `${basePrice}€` : '';  // ✅ Show base price if no specific price is set
+    return basePrice ? `${basePrice}€` : '';  // Show base price if no specific price is set
   };
 
   const calculateTotalPrice = () => {
@@ -204,14 +202,14 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     let total = 0;
   
     dateRange.forEach(date => {
-      if (prices[date]) {
-        total += parseFloat(prices[date]); // Use custom price if available
+      if (fetchedPrices[date]) {
+        total += parseFloat(fetchedPrices[date]); // Use custom price if available
       } else if (basePrice) {
         total += parseFloat(basePrice); // Use base price if no custom price
       }
     });
   
-    // Additional Options Calculation (Each option has its own price)
+    // Additional Options Calculation
     Object.values(options).forEach(option => {
       if (option.selected) total += option.price;
     });
@@ -219,8 +217,6 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     return total;
   };
   
-  
-
   const getDateRange = (start, end) => {
     let dates = [];
     let currentDate = new Date(start);
@@ -230,188 +226,175 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
       dates.push(currentDate.toISOString().split('T')[0]); // Convert to "YYYY-MM-DD"
       currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
     }
-  
     return dates;
   };
+  
   return (
-    <div className="booking-container">
+    <div className="booking-container-resa">
       <NavBar />
-      <form onSubmit={handleSubmit}>
-        <div className="calendar-section">
-          <div className="form-group">
-            <label className="form-label">Date d'arrivée</label>
+      <div className="titleResaWrapper">
+        Reservation
+      </div>
+      <form onSubmit={handleSubmit} className="resaForm">
+        <div className="calendar-section-resa">
+          <div className="form-group-resa">
+            <label className="form-label-resa">Date d'arrivée</label>
             <DatePicker
               selected={startDate}
-              onChange={(date) => {
-                setStartDate(date);
-                setEndDate(null); // ✅ Réinitialiser correctement la date de départ
-              }}
+              onChange={handleStartDateChange}
               selectsStart
               startDate={startDate}
               endDate={endDate}
               minDate={new Date()}
-              excludeDates={blockedDates.map(date => new Date(date))}
-              className="form-input reservation-datepicker"
-              highlightDates={[{
-                "react-datepicker__day--range-start": [startDate],
-                "react-datepicker__day--in-range": [startDate, endDate],
-                "react-datepicker__day--range-end": [endDate]
-              }]}
+              excludeDates={fetchedBlockedDates.map(date => new Date(date))}
+              className="form-input-resa reservation-datepicker"
               dayClassName={date => {
                 const dateStr = date.toISOString().split('T')[0];
 
-                if (date < new Date()) return ''; // ✅ Pas de prix pour les jours passés
-                if (isDateBlocked(date)) return 'blocked-date';
-                if (prices[dateStr]) return 'has-price';
-                if (basePrice) return 'base-price';
+                if (date < new Date()) return ''; 
+                if (isDateBlocked(date)) return 'blocked-date-resa';
+                if (fetchedPrices[dateStr]) return 'has-price-resa';
+                if (basePrice) return 'base-price-resa';
 
                 return '';
               }}
               renderDayContents={(day, date) => (
-                <div className="date-cell">
+                <div className="date-cell-resa">
                   <span>{day}</span>
-                  <span className="price-tag">{renderDatePrice(date)}</span>
+                  <span className="price-tag-resa">{renderDatePrice(date)}</span>
                 </div>
               )}
             />
           </div>
-          <div className="form-group">
-            <label className="form-label">Date de départ</label>
+          <div className="form-group-resa">
+            <label className="form-label-resa">Date de départ</label>
             <DatePicker
               selected={endDate}
-              onChange={date => {
-                if (!startDate) return; // ✅ Empêcher la sélection de la date de départ en premier
-                setEndDate(date);
-              }}
+              onChange={handleEndDateChange}
               selectsEnd
               startDate={startDate}
               endDate={endDate}
-              minDate={startDate} // ✅ Assurer une sélection logique
-              excludeDates={blockedDates.map(date => new Date(date))}
-              className="form-input reservation-datepicker"
-              highlightDates={[{
-                "react-datepicker__day--range-start": [startDate],
-                "react-datepicker__day--in-range": [startDate, endDate],
-                "react-datepicker__day--range-end": [endDate]
-              }]}
+              minDate={startDate}
+              excludeDates={fetchedBlockedDates.map(date => new Date(date))}
+              className="form-input-resa reservation-datepicker"
               dayClassName={date => {
                 const dateStr = date.toISOString().split('T')[0];
 
-                if (date < new Date()) return ''; // ✅ Pas de prix pour les jours passés
-                if (isDateBlocked(date)) return 'blocked-date';
-                if (prices[dateStr]) return 'has-price';
-                if (basePrice) return 'base-price';
+                if (date < new Date()) return ''; 
+                if (isDateBlocked(date)) return 'blocked-date-resa';
+                if (fetchedPrices[dateStr]) return 'has-price-resa';
+                if (basePrice) return 'base-price-resa';
 
                 return '';
               }}
               renderDayContents={(day, date) => (
-                <div className="date-cell">
+                <div className="date-cell-resa">
                   <span>{day}</span>
-                  <span className="price-tag">{renderDatePrice(date)}</span>
+                  <span className="price-tag-resa">{renderDatePrice(date)}</span>
                 </div>
               )}
             />
           </div>
-          {error && <div className="error-message">{error}</div>}
+          {error && <div className="error-message-resa">{error}</div>}
         </div>
 
-        <div className="form-section">
-          <div className="form-group">
-            <label className="form-label">Nombre d'adultes (max 10)</label>
+        <div className="form-section-resa">
+          <div className="form-group-resa">
+            <label className="form-label-resa">Nombre d'adultes (max 10)</label>
             <input
               type="number"
               min="1"
               max="10"
               value={adults}
               onChange={(e) => handleAdultsChange(parseInt(e.target.value))}
-              className="form-input number-input"
+              className="form-input-resa number-input-resa"
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Nombre d'enfants (max 10)</label>
+          <div className="form-group-resa">
+            <label className="form-label-resa">Nombre d'enfants (max 10)</label>
             <input
               type="number"
               min="0"
               max="10"
               value={children}
               onChange={(e) => handleChildrenChange(parseInt(e.target.value))}
-              className="form-input number-input"
+              className="form-input-resa number-input-resa"
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Nombre de bébés</label>
+          <div className="form-group-resa">
+            <label className="form-label-resa">Nombre de bébés</label>
             <input
               type="number"
               min="0"
               value={babies}
               onChange={(e) => setBabies(parseInt(e.target.value))}
-              className="form-input number-input"
+              className="form-input-resa number-input-resa"
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Nombre d'animaux (max 5)</label>
+          <div className="form-group-resa">
+            <label className="form-label-resa">Nombre d'animaux (max 5)</label>
             <input
               type="number"
               min="0"
               max="5"
               value={pets}
               onChange={(e) => setPets(Math.min(5, parseInt(e.target.value)))}
-              className="form-input number-input"
+              className="form-input-resa number-input-resa"
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Nom de famille</label>
+          <div className="form-group-resa">
+            <label className="form-label-resa">Nom de famille</label>
             <input
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="form-input"
+              className="form-input-resa"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Prénom</label>
+          <div className="form-group-resa">
+            <label className="form-label-resa">Prénom</label>
             <input
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className="form-input"
+              className="form-input-resa"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Numéro de téléphone</label>
+          <div className="form-group-resa">
+            <label className="form-label-resa">Numéro de téléphone</label>
             <input
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="form-input"
+              className="form-input-resa"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Adresse e-mail</label>
+          <div className="form-group-resa">
+            <label className="form-label-resa">Adresse e-mail</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-input"
+              className="form-input-resa"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Options supplémentaires</label>
-            <div className="options-grid">
+          <div className="form-group-resa">
+            <label className="form-label-resa">Options supplémentaires</label>
+            <div className="options-grid-resa">
               {Object.entries(options).map(([key, option]) => (
-                <label key={key} className="option-item">
+                <label key={key} className="option-item-resa">
                   <input
                     type="checkbox"
                     checked={option.selected}
@@ -425,23 +408,24 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
             </div>
           </div>
 
-          <div className="form-group total-price-container">
-            <h4 className="total-price-title">Montant total :</h4>
-            <div className="total-price-display">
+          <div className="form-group-resa total-price-container-resa">
+            <h4 className="total-price-title-resa">Montant total :</h4>
+            <div className="total-price-display-resa">
               {calculateTotalPrice() > 0 ? `${calculateTotalPrice()}€` : "Sélectionnez des dates pour voir le total"}
             </div>
           </div>
-
-          <button type="submit" className="submit-button">
-            Réserver
-          </button>
+          <div className="btnResaWrapper">
+            <button type="submit" className="submit-button-resa">
+              Réserver
+            </button>
+          </div>
         </div>
       </form>
 
-      {/* ✅ Pop-up de confirmation */}
+      {/* Pop-up de confirmation */}
       {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-content">
+        <div className="popup-overlay-resa">
+          <div className="popup-content-resa">
             <h2>Merci pour votre réservation !</h2>
             <p>Vous serez contacté dans les plus brefs délais pour confirmer celle-ci ainsi que pour procéder au paiement.</p>
             <button onClick={() => window.location.href = '/'}>OK</button>
@@ -449,7 +433,6 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
         </div>
       )}
     </div>
-
   );
 };
 
