@@ -625,15 +625,17 @@ body{
         display: flex;
         justify-content: center;
         align-items: center;
+        min-height: 120vh;
       }
 
       .carousel-container{
         max-width: 88vw;
-        max-height: 68vw;
+        max-height: 48vw;
         margin-inline: 6vw;
         display: flex;
         justify-content: center;
         align-items: center;
+        margin-bottom: 11vh;
       }
       .nav-button.prev{
         left: -18px !important;
