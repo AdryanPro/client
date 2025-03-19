@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import '../../CSS/NavBar.css';
 import logo from '../../Images/Logo.png';
 import Biglogo from '../../Images/BigLogo.png';
+
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,6 +31,12 @@ export default function NavBar() {
     };
   }, [location]);
 
+  // Function to close menu and scroll to top
+  const handleLinkClick = () => {
+    setIsOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scrolls smoothly to the top
+  };
+
   return (
     <>
       <nav className={`navbar ${isScrolled ? 'visible' : 'hidden'}`}>
@@ -42,7 +50,9 @@ export default function NavBar() {
             </button>
 
             <div className="logo">
-              <a className='no-underline' href='/'><img src={logo} alt="Logo" className="navbar-logo" /></a> 
+              <Link to="/" className="no-underline" onClick={handleLinkClick}>
+                <img src={logo} alt="Logo" className="navbar-logo" />
+              </Link>
             </div>
 
             <div className="spacer"></div>
@@ -55,9 +65,10 @@ export default function NavBar() {
               <img src={Biglogo} alt="Logo" className="dropdown-logo" />
             </div>
             <div className="menu-items">
-              <a href="/" className="menu-item">Home</a>
-              <a href="/Reservation" className="menu-item">Reservation</a>
-              <a href="/contact" className="menu-item">Contact</a>
+            <Link to="/" replace={true} className="menu-item" onClick={() => { window.scrollTo(0, 0); setIsOpen(false); }}>Home</Link>
+            <Link to="/Reservation" replace={true} className="menu-item" onClick={() => { window.scrollTo(0, 0); setIsOpen(false); }}>Reservation</Link>
+            <Link to="/Galerie" replace={true} className="menu-item" onClick={() => { window.scrollTo(0, 0); setIsOpen(false); }}>La Galerie</Link>
+            <Link to="/Contact" replace={true} className="menu-item" onClick={() => { window.scrollTo(0, 0); setIsOpen(false); }}>Contact</Link>
             </div>
           </div>
         )}

@@ -1,51 +1,73 @@
-import React from 'react'
-import '../../CSS/Footer.css'
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Lock } from "lucide-react";
+import { Menu, X } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import '../../CSS/NavBar.css';
+import logo from '../../Images/Logo.png';
+import Biglogo from '../../Images/BigLogo.png';
 
-export default function Footer({ isAdmin, handleAdminSwitch }) {
+export default function NavBar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      setIsScrolled(true); // Always display the navbar on non-home pages
+      return;
+    }
+
+    const handleScroll = () => {
+      const homeHeader = document.querySelector('.Home-header');
+      if (homeHeader) {
+        const homeHeaderBottom = homeHeader.getBoundingClientRect().bottom;
+        setIsScrolled(homeHeaderBottom <= 0);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [location]);
+
   return (
-<div className="footer">
-      <div className="footer-content">
-        {/* Info and Contact Side by Side */}
-        <div className="footer-left">
-          <div className="info">
-            <h1>Localisation :</h1>
-            <a className='FooterA' href='https://www.google.com/maps/place/53200+Daon/'>Google Maps</a>
+    <>
+      <nav className={`navbar ${isScrolled ? 'visible' : 'hidden'}`}>
+        <div className="navbar-container">
+          <div className="navbar-content">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="hamburger-button"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
 
-            <h1>Avis Clients :</h1>
-            <a className='FooterA' href='https://www.airbnb.fr/rooms/39481267/reviews'>Voir les avis</a>
-
-            <h1>Annonce AirBnB :</h1>
-            <a className='FooterA' href='https://www.airbnb.fr/rooms/39481267/reviews'>Voir l'annonce</a>
-          </div>
-
-          <div className="contact">
-            <h1 className='contactH1'>Coordonnées :</h1>
-            <p className='contactP'>06 07 08 09 10</p>
-            <p className='contactP'>lalongere@.com</p>
-            <a className='FooterA' href='https://www.google.com/maps/place/1+Rte+de+la+Mayenne,+49220+La+Jaille-Yvon'>
-              <p className='contactP'>1 route de la Mayenne, France</p>
-            </a>
-            <div className='BtnWrapper'>
-              <Link to='/Contact' className='FooterA'>
-                <button className="contactBtn">CONTACT</button>
+            <div className="logo">
+              <Link to="/" className="no-underline">
+                <img src={logo} alt="Logo" className="navbar-logo" />
               </Link>
             </div>
+
+            <div className="spacer"></div>
           </div>
         </div>
 
-        {/* Admin Switch Button on Right Side */}
-        <div className="footer-right">
-          <button
-            onClick={handleAdminSwitch}
-            className="admin-switch-btn"
-          >
-            <Lock className="w-4 h-4" />
-            {isAdmin ? 'Switch to User View' : 'Switch to Admin View'}
-          </button>
-        </div>
-      </div>
-    </div>  
-    )
+        {isOpen && (
+          <div className="mobile-menu">
+            <div className="menu-logo">
+              <img src={Biglogo} alt="Logo" className="dropdown-logo" />
+            </div>
+            <div className="menu-items">
+              <Link to="/" className="menu-item" onClick={() => setIsOpen(false)}>Home</Link>
+              <Link to="/Reservation" className="menu-item" onClick={() => setIsOpen(false)}>Reservation</Link>
+              <Link to="/Galerie" className="menu-item" onClick={() => setIsOpen(false)}>La Galerie</Link>
+              <Link to="/Contact" className="menu-item" onClick={() => setIsOpen(false)}>Contact</Link>
+            </div>
+          </div>
+        )}
+      </nav>
+      {isScrolled && <div className="navbar-spacer"></div>}
+    </>
+  );
 }
