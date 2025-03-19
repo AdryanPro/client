@@ -637,6 +637,10 @@ body{
         align-items: center;
         margin-bottom: 11vh;
       }
+      .dot {
+      width: 3px;
+      height: 5px;
+    }
       .nav-button.prev{
         left: -18px !important;
       }
@@ -644,7 +648,7 @@ body{
         right: -18px !important;
       }
       .buttonWrapperRegion{
-        display: none;
+        display: block;
       }
     }
   
