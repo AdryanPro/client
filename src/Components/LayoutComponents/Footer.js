@@ -45,12 +45,12 @@ export default function Footer({ isAdmin, handleAdminSwitch }) {
               onClick={handleAdminSwitch}
               className="admin-switch-btn"
             >
-              <Lock className="w-4 h-4" />
+              <Lock />
               {isAdmin ? 'Switch to User View' : 'Switch to Admin View'}
             </button>
           )}
         </div>
       </div>
-    </div>  
+    </div>
   );
 }

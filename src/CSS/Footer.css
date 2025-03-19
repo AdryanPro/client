@@ -1,38 +1,120 @@
+/* Footer.css */
 .footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background-color: #61A2A7;
-  color: white;
-  padding: 20px;
+  color: #fff;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
 }
 
 .footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
-  width: 100%;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
+  gap: 20px;
 }
 
 .footer-left {
   display: flex;
-  gap: 40px; /* Space between Info and Contact */
+  flex-wrap: wrap;
+  gap: 40px;
 }
 
 .info, .contact {
+  flex: 1;
+  min-width: 200px;
+}
+
+.info h1, .contactH1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.FooterA {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.FooterA:hover {
+  color: #2c3e50;
+}
+
+.contactP {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.BtnWrapper {
+  margin-top: 20px;
+}
+
+.contactBtn {
+  background-color: #2c3e50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin-left: 0;
+}
+
+.contactBtn:hover {
+  background-color: #283847;
+}
+
+.footer-right {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
 }
 
 .admin-switch-btn {
-  background-color: #555;
-  color: white;
-  padding: 10px 15px;
+  background-color: #2c3e50;
+  color: #fff;
   border: none;
-  cursor: pointer;
+  padding: 10px 20px;
   border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
 }
 
 .admin-switch-btn:hover {
-  background-color: #777;
+  background-color: #4D8E93;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-left {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .footer-right {
+    margin-top: 20px;
+  }
+
+  .admin-switch-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .contactBtn{
+    margin-left: 0;
+  }
 }
