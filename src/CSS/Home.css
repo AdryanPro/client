@@ -639,7 +639,7 @@ body{
       }
       .dot {
       width: 1px !important;
-      height: 15px !important;
+      height: 1px !important;
       }
       .nav-button.prev{
         left: -18px !important;
