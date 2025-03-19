@@ -339,7 +339,8 @@ body{
     .carousel-container {
       position: relative;
       margin: 0;
-      height: 400px;
+      min-height: 600px;
+      max-width: 99vw;
     }
     
     .carousel-slide {
@@ -633,9 +634,6 @@ body{
         justify-content: center;
         align-items: center;
       }
-      /* .nav-button {
-        display: none;
-      } */
       .nav-button.prev{
         left: -18px !important;
       }

@@ -67,7 +67,7 @@ export const Home = () => {
     useEffect(() => {
       const timer = setInterval(() => {
         nextSlide();
-      }, 10000); // change the speed of the carousel
+      }, 3000); // change the speed of the carousel
   
       return () => clearInterval(timer);
     }, [nextSlide, 3000]);

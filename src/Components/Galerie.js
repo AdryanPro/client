@@ -113,7 +113,7 @@ export const Galerie = () => {
               <div className="carousel-contentGaleriePage">
                 {section.images.slice(currentIndices[sectionIndex], currentIndices[sectionIndex] + getImagesPerSlide()).map((image, index) => (
                   <div key={index} className="carousel-image-wrapperGaleriePage">
-                    <img src={image.url} alt={image.title} className="carousel-imageGaleriePage" />
+                    <img src={image.url} alt={image.title} loading='lazy' className="carousel-imageGaleriePage" />
                     <div className="image-overlayGaleriePage">
                       <p className="overlay-titleGaleriePage">{image.title}</p>
                       <p className="overlay-textGaleriePage">{image.text}</p>

@@ -73,8 +73,22 @@
 }
 
 @media (max-width: 1200px) {
-  .carousel-image-wrapperGaleriePage {
-    width: 100%; /* ✅ 1 image per row */
+  body{
+    overflow-x: hidden;
+  }
+  .carousel-image-wrapperGaleriePage { /* ✅ 1 image per row */
+    /* min-width: 80vw; 
+    min-height: 80vw;  */
+    min-width: 180%;
+  }
+  .prevGaleriePage {
+    z-index: 10;
+  }
+  .nextGaleriePage {
+    z-index: 10;
+  }
+  .image-overlayGaleriePage p{
+    z-index: 11;
   }
 }
 
