@@ -638,7 +638,7 @@ body{
         margin-bottom: 11vh;
       }
       .dot {
-        min-width: 2px !important;
+        min-width: 1px !important;
         min-height: 12px !important;
       }
       .nav-button.prev{
