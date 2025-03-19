@@ -8,6 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
+  min-width: 100vw;
 }
 p{
   margin: 0;

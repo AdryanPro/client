@@ -1,3 +1,6 @@
+body{
+  overflow-x: hidden;
+}
 .contactBtn{
   width: 64%;
   height: 14%;
@@ -339,14 +342,6 @@
       height: 400px;
     }
     
-    @media (min-width: 768px) {
-      .carousel-container {
-        height: 600px;
-      margin: 0;
-
-      }
-    }
-    
     .carousel-slide {
       position: absolute;
       width: 100%;
@@ -453,7 +448,7 @@
       border-radius: 4px;
       border: 4px;
       color: white;
-    
+      margin-bottom: 9vh;
     
     }
     .EnSavoirPlusBtn:hover{
@@ -461,3 +456,194 @@
       transform: scale(1.1);
       /* background-color: rgba(255, 255, 255, 0.6) */
     }
+
+    @media (max-width: 1024px){
+      /* body{
+        overflow-x: hidden;
+      } */
+      .Home-header{
+        max-width: 100vw !important;
+        min-height: 100vh !important;
+      }
+      .Home-header h1{
+        margin-top: 9vh;
+        font-size: 2rem;
+        max-width: 100%;
+      }
+      .Home-header h2{
+        font-size: 1rem;
+        max-width: 100%;
+      }
+      .Home-header button{
+        font-size: 1rem;
+        width: 27vw;
+        height: 4vh;
+      }
+      .fixednavbar{
+        display: none;
+      }
+      .Welcome{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .WelcomeH1{
+        font-size: 1.6rem;
+        margin-bottom: 0;
+        text-align: center;
+        max-width: 100vw;
+        margin-bottom: 9vh;
+      }
+      .WelcomeP{
+        font-size: 1rem;
+        margin-bottom: 6vh;
+      }
+      .reserveCampagneMayenne{
+        margin-top: 27vh;
+        width: 33vw;
+        height: 7vh;
+      }
+      .NotreMaison{
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+        align-items: center;
+        min-height: 88vh;
+        max-width: 100vw;
+      }
+      .wrapperNotreMaisonTexte{
+        min-width: 100vw;
+        max-width: 100vw;
+        margin: 0;
+      }
+      .NotreMaisonH1{
+        font-size: 2rem;
+        max-width: 100%;
+        text-align: center;
+        margin-top: 9vh;
+        margin-bottom: 6vh;
+      }
+      .NotreMaisonP{
+        font-size: 1.3rem;
+        text-align: center;
+      }
+      .galerieBtn{
+        font-size: 1.3rem;
+        width: 33vw;
+        height: 7vh;
+        margin-top: 3vh;
+        margin-right: 0;
+      }
+      .NotreMaisonImg{
+        margin: 0;
+        min-width: 88vw;
+        margin-top: 3vh;
+      }
+      .ActiviterWrapper {
+        margin-top: 48vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        max-width: 100vw;
+        margin-bottom: 8vh;
+      }
+    
+      .activiterH1 {
+        font-size: 2rem;
+        margin: 0;
+        text-align: center;
+        min-width: 100%;
+        min-height: 18vh;
+      }
+    
+      .activity-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Two columns */
+        grid-template-rows: repeat(4, auto); /* Four rows, height based on content */
+        gap: 16px; /* Space between items */
+        max-width: 100vw;
+        padding: 0;
+        font-size: 1rem;
+        /* Reset desktop-specific styles */
+        grid-auto-rows: auto; /* Override desktop's fixed row height */
+        justify-items: center; /* Center items horizontally */
+        align-items: center; /* Center items vertically */
+      }
+    
+      .activity-item {
+        max-width: 88px;
+        min-width: 88px;
+        max-height: 88px;
+        min-height: 88px;
+        margin: 0 !important;
+        margin-bottom: 3vh !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* Reset desktop-specific styles */
+        width: auto; /* Override desktop's fixed width */
+        height: auto; /* Override desktop's fixed height */
+        padding: 10px; /* Adjust padding for mobile */
+        background: #f8f8f8; /* Keep background if needed */
+        border-radius: 12px; /* Keep border radius if needed */
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Keep shadow if needed */
+      }
+    
+      .activity-icon {
+        font-size: 2.3rem;
+        margin-bottom: 3px; /* Adjust spacing for mobile */
+      }
+    
+      .activity-label {
+        font-size: 1rem; /* Adjust font size for mobile */
+        text-align: center;
+        margin-top: 8px; /* Adjust spacing for mobile */
+      }
+    
+      /* Reset custom placements for mobile */
+      .activity-item:nth-child(1),
+      .activity-item:nth-child(2),
+      .activity-item:nth-child(3),
+      .activity-item:nth-child(4),
+      .activity-item:nth-child(5),
+      .activity-item:nth-child(6),
+      .activity-item:nth-child(7),
+      .activity-item:nth-child(8) {
+        grid-column: auto; /* Reset custom column placements */
+        grid-row: auto; /* Reset custom row placements */
+        margin: 0; /* Reset custom margins */
+      }
+      .regionTitre{
+        display: block;
+        font-size: 1rem;
+      }
+      .NotreRegion{
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .carousel-container{
+        max-width: 88vw;
+        margin-inline: 6vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      /* .nav-button {
+        display: none;
+      } */
+      .nav-button.prev{
+        left: -18px !important;
+      }
+      .nav-button.next{
+        right: -18px !important;
+      }
+      .buttonWrapperRegion{
+        display: none;
+      }
+    }
+  

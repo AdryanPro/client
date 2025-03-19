@@ -67,7 +67,7 @@ export const Home = () => {
     useEffect(() => {
       const timer = setInterval(() => {
         nextSlide();
-      }, 3000);
+      }, 10000); // change the speed of the carousel
   
       return () => clearInterval(timer);
     }, [nextSlide, 3000]);
@@ -119,10 +119,6 @@ export const Home = () => {
                     dans une campagne valonnée et verdoyante,surplombant 
                     la sinueuse rivière qu’est la Mayenne.
                 </p>
-                <div className="bg-blue-500 text-blue p-4 rounded-lg">
-                  🎉 Tailwind is working!
-                </div>
-                
                 <Link to={'/Reservation'}>
                     <button className="reserveCampagneMayenne">Réserver</button>
                 </Link>
