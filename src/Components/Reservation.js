@@ -34,7 +34,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     Option8: { selected: false, price: 25 },
   });
   const [showPopup, setShowPopup] = useState(false);
-  const BASE_URL = `http://localhost:5001` || 'https://maisonclem2-ca892d3e40be.herokuapp.com'; // Your backend server URL
+  const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
   useEffect(() => {
     const fetchCalendarData = async () => {

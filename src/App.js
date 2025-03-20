@@ -21,7 +21,8 @@ function App() {
   const [minNightsRules, setMinNightsRules] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_BASE_URL = `http://localhost:5001` || 'https://maisonclem2-ca892d3e40be.herokuapp.com'; // Your backend server URL
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
 
   const handlePriceUpdate = (newPrices) => {
     setPrices(newPrices);
@@ -35,29 +36,40 @@ function App() {
     setMinNightsRules(newRules);
   };
 
-const handlePasswordSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-  
-  try {
-    // Notice the change here to use the API_BASE_URL
-    const response = await axios.get(`${API_BASE_URL}/api/admin-calendar`, {
-      headers: {
-        'password': password
-      }
-    });
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
     
-    // If we get here, authentication was successful
-    setIsAdmin(true);
-    setShowPasswordPrompt(false);
-    setPassword('');
-    setPasswordError('');
-  } catch (error) {
-    // Rest of your error handling code
-  } finally {
-    setIsLoading(false);
-  }
-};
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/admin-calendar`, {
+        headers: {
+          'password': password
+        }
+      });
+      
+      // Si la requête réussit, l'authentification est considérée comme réussie
+      setIsAdmin(true);
+      setShowPasswordPrompt(false);
+      setPassword('');
+      setPasswordError('');
+    } catch (error) {
+      // Gérer l'erreur d'authentification
+      console.error('Authentication error:', error);
+      
+      if (error.response) {
+        // Le serveur a répondu avec un statut d'erreur
+        setPasswordError(error.response.data.error || 'Authentication failed');
+      } else if (error.request) {
+        // La requête a été faite mais aucune réponse n'a été reçue
+        setPasswordError('No response from server. Please try again.');
+      } else {
+        // Une erreur s'est produite lors de la configuration de la requête
+        setPasswordError('Error sending request. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleAdminSwitch = () => {
     if (isAdmin) {

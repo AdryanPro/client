@@ -25,28 +25,60 @@ const AdminCalendar = () => {
   const [minNights, setMinNights] = useState('');
   const [refresh, setRefresh] = useState(false);
 
-  const BASE_URL = `http://localhost:5001` || 'https://maisonclem2-ca892d3e40be.herokuapp.com'; // Your backend server URL
+  const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+ // Your backend server URL
   // Fetch initial data from backend
 
+  // useEffect(() => {
+  //   const fetchCalendarData = async () => {
+  //     try {
+  //       // Add the admin password to the request headers
+  //       const response = await axios.get(`${BASE_URL}/api/admin-calendar`, {
+  //         headers: {
+  //           'password': 'JeSuisTropFort' 
+  //         }
+  //       });
+  //       setPrices(response.data.prices || {});
+  //       setBlockedDates(response.data.blockedDates || []);
+  //       setMinNightsRules(response.data.minNightsRules || []);
+  //       setBasePrice(response.data.basePrice ? parseFloat(response.data.basePrice) : "");
+  //     } catch (error) {
+  //       console.error("Error fetching calendar data:", error);
+  //     }
+  //   };
+  //   fetchCalendarData();
+  // }, [refresh]);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/admin-calendar`);
+        // Use the state value instead of the hardcoded password
+        const response = await axios.get(`${BASE_URL}/api/admin-calendar`, {
+          headers: {
+            'password': adminPassword 
+          }
+        });
         setPrices(response.data.prices || {});
         setBlockedDates(response.data.blockedDates || []);
         setMinNightsRules(response.data.minNightsRules || []);
-        setBasePrice(response.data.basePrice ? parseFloat(response.data.basePrice) : ""); // ✅ Ensure it's a number
+        setBasePrice(response.data.basePrice ? parseFloat(response.data.basePrice) : "");
       } catch (error) {
         console.error("Error fetching calendar data:", error);
+        // Handle authentication error (e.g., show login form)
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          // Set a state to show login form or handle accordingly
+          setIsAuthenticated(false);
+        }
       }
     };
-    fetchCalendarData();
-  }, [refresh]); // ✅ Use refresh to re-fetch data properly
-  
-  
-  
-  
-  
+    
+    // Only fetch data if we have a password
+    if (adminPassword) {
+      fetchCalendarData();
+    }
+  }, [adminPassword, refresh]);
 
   // Update price for a specific range of dates
   const handleSetRangePrice = async () => {
