@@ -412,7 +412,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           <div className="form-group-resa total-price-container-resa">
             <h4 className="total-price-title-resa">Montant total :</h4>
             <div className="total-price-display-resa">
-              {calculateTotalPrice() > 0 ? `${calculateTotalPrice()}€` : "Sélectionnez des dates pour voir le total"}
+              {calculateTotalPrice() > 0 ? `${calculateTotalPrice()}€` : "Sélectionnez des dates pour voir le montant total"}
             </div>
           </div>
           <div className="btnResaWrapper">

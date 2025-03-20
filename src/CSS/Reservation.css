@@ -276,8 +276,21 @@
     overflow-x: hidden;
   }
   .resaForm {
-    min-width: 96vw;
-    max-width: 96vw;
+    min-width: 80vw;
+    max-width: 86vw;
+  }
+  .form-input-resa{
+    max-width: 80% !important;
+  }
+  .options-grid-resa {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 10px; /* Adjust the gap between items */
+  }
+
+  /* Ensure the option items take up full width in the grid */
+  .option-item-resa {
+    width: 100%;
   }
   .titleResaWrapper{
     font-size: 2rem;
