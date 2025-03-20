@@ -4,10 +4,11 @@ import { Reservation } from "./Components/Reservation";
 import { Galerie } from "./Components/Galerie";
 import { Contact } from "./Components/Contact";
 import AdminCalendar from './Components/AdminCalendar';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CSS/popupAdmin.css";
 import APropos from "./Components/APropos";
 import Footer from "./Components/LayoutComponents/Footer";
+import axios from "axios"; // Make sure axios is installed
 
 function App() {
   // Global state for reservation management
@@ -18,9 +19,8 @@ function App() {
   const [prices, setPrices] = useState({});
   const [blockedDates, setBlockedDates] = useState([]);
   const [minNightsRules, setMinNightsRules] = useState([]);
-
-  // Admin password (in production, this should be securely handled)
-  const ADMIN_PASSWORD = 'admin123';
+  const [isLoading, setIsLoading] = useState(false);
+  const API_BASE_URL = 'http://localhost:5001'; // Your backend server URL
 
   const handlePriceUpdate = (newPrices) => {
     setPrices(newPrices);
@@ -34,23 +34,52 @@ function App() {
     setMinNightsRules(newRules);
   };
 
-  const handlePasswordSubmit = (e) => {
-    e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setIsAdmin(true);
-      setShowPasswordPrompt(false);
-      setPassword('');
-      setPasswordError('');
-    } else {
-      setPasswordError('Incorrect password');
-    }
-  };
+const handlePasswordSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  
+  try {
+    // Notice the change here to use the API_BASE_URL
+    const response = await axios.get(`${API_BASE_URL}/api/admin-calendar`, {
+      headers: {
+        'password': password
+      }
+    });
+    
+    // If we get here, authentication was successful
+    setIsAdmin(true);
+    setShowPasswordPrompt(false);
+    setPassword('');
+    setPasswordError('');
+  } catch (error) {
+    // Rest of your error handling code
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleAdminSwitch = () => {
     if (isAdmin) {
       setIsAdmin(false);
     } else {
       setShowPasswordPrompt(true);
+    }
+  };
+
+  // Optional: Function to change admin password
+  const changeAdminPassword = async (currentPassword, newPassword) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/update-admin-password`, 
+        { newPassword },
+        { headers: { 'password': currentPassword } }
+      );
+      return { success: true, message: 'Password updated successfully' };
+    } catch (error) {
+      console.error('Error updating password:', error);
+      return { 
+        success: false, 
+        message: error.response?.data?.error || 'Failed to update password' 
+      };
     }
   };
 
@@ -74,6 +103,7 @@ function App() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="admin-popup-input"
                   placeholder="Password"
+                  disabled={isLoading}
                 />
                 {passwordError && (
                   <p className="admin-popup-error">{passwordError}</p>
@@ -83,8 +113,9 @@ function App() {
                 <button
                   type="submit"
                   className="admin-popup-button admin-popup-button-login"
+                  disabled={isLoading}
                 >
-                  Login
+                  {isLoading ? 'Verifying...' : 'Login'}
                 </button>
                 <button
                   type="button"
@@ -94,6 +125,7 @@ function App() {
                     setPasswordError('');
                   }}
                   className="admin-popup-button admin-popup-button-cancel"
+                  disabled={isLoading}
                 >
                   Cancel
                 </button>
@@ -116,6 +148,8 @@ function App() {
                 onPriceUpdate={handlePriceUpdate}
                 onBlockedDatesUpdate={handleBlockedDatesUpdate}
                 onMinNightsUpdate={handleMinNightsUpdate}
+                // Pass changeAdminPassword function if you want to implement password change in AdminCalendar
+                changeAdminPassword={changeAdminPassword}
               />
             ) : (
               <Reservation

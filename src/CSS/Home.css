@@ -679,6 +679,7 @@ body{
         margin-bottom: 6vh;
       }
       .scroll-to-top-button {
+        display: none;
         right: 6vw;
         bottom: -3vh;
       }

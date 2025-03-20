@@ -45,7 +45,7 @@ export const Home = () => {
     ];
     const activities = [
       { icon: pied, label: "Balade à pied", link: "https://example.com/balade" },
-      { icon: "🎤", label: "Guinguette", link: "https://example.com/guinguette" },
+      { icon: "🎤", label: "Guinguette", link: "https://www.facebook.com/share/1AuQVgrdtH/?mibextid=wwXIfr" },
       { icon: velo, label: "Balade à vélo", link: "https://example.com/velo" },
       { icon: pedalo, label: "Location de pédalos", link: "https://example.com/pedalo" },
       { icon: accrobranche, label: "Accrobranche", link: "https://example.com/accrobranche" },
