@@ -58,7 +58,14 @@
   border-radius: 10px;
   transition: transform 0.3s ease-in-out;
 }
-
+.overlay-titleGaleriePage{
+  margin-bottom: 2vh;
+  font-style: italic;
+  font-weight: 700;
+}
+.overlay-textGaleriePage{
+  padding-inline: 6vw;
+}
 /* ===== Responsive Layout (Updated) ===== */
 @media (min-width: 1981px) {
   .carousel-image-wrapperGaleriePage {
