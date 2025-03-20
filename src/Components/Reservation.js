@@ -34,11 +34,12 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     Option8: { selected: false, price: 25 },
   });
   const [showPopup, setShowPopup] = useState(false);
+  const BASE_URL = `http://localhost:5001` || 'https://maisonclem2-ca892d3e40be.herokuapp.com'; // Your backend server URL
 
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/get-reservation-data');
+        const response = await axios.get(`${BASE_URL}/api/get-reservation-data`);
         setFetchedPrices(response.data.prices || {});
         setFetchedBlockedDates(response.data.blockedDates || []);
         setFetchedMinNightsRules(response.data.minNightsRules || []);

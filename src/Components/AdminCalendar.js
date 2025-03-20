@@ -25,11 +25,13 @@ const AdminCalendar = () => {
   const [minNights, setMinNights] = useState('');
   const [refresh, setRefresh] = useState(false);
 
+  const BASE_URL = `http://localhost:5001` || 'https://maisonclem2-ca892d3e40be.herokuapp.com'; // Your backend server URL
   // Fetch initial data from backend
+
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/admin-calendar');
+        const response = await axios.get(`${BASE_URL}/api/admin-calendar`);
         setPrices(response.data.prices || {});
         setBlockedDates(response.data.blockedDates || []);
         setMinNightsRules(response.data.minNightsRules || []);
@@ -55,7 +57,7 @@ const AdminCalendar = () => {
     const dateRange = getDateRange(priceStartDate, priceEndDate);
   
     try {
-      await axios.post('http://localhost:5001/api/update-price-range', {
+      await axios.post(`${BASE_URL}/api/update-price-range`, {
         startDate: startStr,
         endDate: endStr,
         newPrice: rangePrice,
@@ -86,7 +88,7 @@ const AdminCalendar = () => {
     if (!basePrice) return;
   
     try {
-      await axios.post('http://localhost:5001/api/set-base-price', { basePrice });
+      await axios.post(`${BASE_URL}/api/set-base-price`, { basePrice });
   
       // ✅ Ensure the new base price updates the state correctly
       setPrices(prev => ({ ...prev, basePrice: parseFloat(basePrice) }));
@@ -120,7 +122,7 @@ const AdminCalendar = () => {
       const dateRange = getDateRange(blockStartDate, blockEndDate);
   
       // Send the full list of blocked dates to the backend
-      await axios.post('http://localhost:5001/api/block-dates', {
+      await axios.post(`${BASE_URL}/api/block-dates`, {
         dates: dateRange, 
       });
   
@@ -139,7 +141,7 @@ const AdminCalendar = () => {
   const handleUnblockDateRange = async () => {
     if (!blockStartDate || !blockEndDate) return;
     try {
-      await axios.post('http://localhost:5001/api/unblock-dates', {
+      await axios.post(`${BASE_URL}/api/unblock-dates`, {
         startDate: blockStartDate.toISOString().split('T')[0],
         endDate: blockEndDate.toISOString().split('T')[0],
       });
@@ -155,7 +157,7 @@ const AdminCalendar = () => {
   const handleSetMinNights = async () => {
     if (!minNightsStartDate || !minNightsEndDate || !minNights) return;
     try {
-      await axios.post('http://localhost:5001/api/set-min-nights', {
+      await axios.post(`${BASE_URL}/api/set-min-nights`, {
         startDate: minNightsStartDate.toISOString().split('T')[0],
         endDate: minNightsEndDate.toISOString().split('T')[0],
         minNights,
@@ -176,7 +178,7 @@ const AdminCalendar = () => {
   // Remove a minimum nights rule
   const handleRemoveMinNightsRule = async (index) => {
     try {
-        const response = await axios.delete(`http://localhost:5001/api/remove-min-nights-rule/${index}`);
+        const response = await axios.delete(`${BASE_URL}/api/remove-min-nights-rule/${index}`);
         
         // ✅ Update state to reflect the removed rule
         setMinNightsRules(response.data.minNightsRules);
@@ -230,7 +232,7 @@ const AdminCalendar = () => {
   // Unblock a single date
   const handleUnblockDate = async (date) => {
     try {
-        await axios.delete(`http://localhost:5001/api/unblock-date/${date}`);
+        await axios.delete(`${BASE_URL}/api/unblock-date/${date}`);
         setBlockedDates(prev => prev.filter(d => d !== date)); // Update UI
     } catch (error) {
         console.error("Error unblocking date:", error);
@@ -242,7 +244,7 @@ const AdminCalendar = () => {
     const dateStr = date.toISOString().split('T')[0]; // Convert Date object to "YYYY-MM-DD" format
   
     try {
-      await axios.delete(`http://localhost:5001/api/remove-price/${dateStr}`);
+      await axios.delete(`${BASE_URL}/api/remove-price/${dateStr}`);
   
       // Update local state to reflect the removed price
       setPrices(prev => {

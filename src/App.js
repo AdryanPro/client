@@ -21,7 +21,7 @@ function App() {
   const [minNightsRules, setMinNightsRules] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_BASE_URL = 'https://maisonclem2-ca892d3e40be.herokuapp.com'; // Your backend server URL
+  const API_BASE_URL = `http://localhost:5001` || 'https://maisonclem2-ca892d3e40be.herokuapp.com'; // Your backend server URL
 
   const handlePriceUpdate = (newPrices) => {
     setPrices(newPrices);
