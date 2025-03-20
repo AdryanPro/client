@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
 import "../CSS/Home.css";
 import "../CSS/HomeResponsive.css"
 import { Link } from 'react-router-dom';
@@ -11,7 +11,12 @@ import PetitVillage from '../Images/NotreRegion4.png'
 import LaMayenne from '../Images/NotreRegion5.png'
 import Logo from '../Images/LogoMaison.png'
 import NavBar from './LayoutComponents/NavBar';
-import { ChevronUp } from 'lucide-react';
+import accrobranche from "../Images/cardHomePage/acrobranche.png"
+import epice from "../Images/cardHomePage/epice.png"
+import miniGolf from "../Images/cardHomePage/miniGolf.png"
+import pedalo from "../Images/cardHomePage/pedalo.png"
+import velo from "../Images/cardHomePage/velo.png"
+import pied from "../Images/cardHomePage/pied.png"
 
 export const Home = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -39,14 +44,14 @@ export const Home = () => {
       }
     ];
     const activities = [
-      { icon: "🚶", label: "Balade à pied", link: "https://example.com/balade" },
+      { icon: pied, label: "Balade à pied", link: "https://example.com/balade" },
       { icon: "🎤", label: "Guinguette", link: "https://example.com/guinguette" },
-      { icon: "🚲", label: "Balade à vélo", link: "https://example.com/velo" },
-      { icon: "🚣", label: "Location de pédalos", link: "https://example.com/pedalo" },
-      { icon: "🌳", label: "Accrobranche", link: "https://example.com/accrobranche" },
-      { icon: "⛳", label: "Mini Golf", link: "https://example.com/mini-golf" },
+      { icon: velo, label: "Balade à vélo", link: "https://example.com/velo" },
+      { icon: pedalo, label: "Location de pédalos", link: "https://example.com/pedalo" },
+      { icon: accrobranche, label: "Accrobranche", link: "https://example.com/accrobranche" },
+      { icon: miniGolf, label: "Mini Golf", link: "https://example.com/mini-golf" },
       { icon: "🏰", label: "Châteaux", link: "https://example.com/chateaux" },
-      { icon: "🏪", label: "Épicerie", link: "https://example.com/epicerie" }
+      { icon: epice, label: "Épicerie", link: "https://example.com/epicerie" }
     ];
     const nextSlide = useCallback(() => {
       setCurrentIndex(prevIndex => 
@@ -148,7 +153,8 @@ export const Home = () => {
           <div className="activity-container">
             {activities.map((activity, index) => (
               <a key={index} href={activity.link} target="_blank" rel="noopener noreferrer" className="activity-item">
-                <div className="activity-icon">{activity.icon}</div>
+                {/* <div className="activity-icon">{activity.icon}</div> */}
+                <img src={activity.icon} className="activity-icon" alt={activity.label} />
                 <div className="activity-label">{activity.label}</div>
               </a>
             ))}

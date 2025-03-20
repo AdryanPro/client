@@ -283,7 +283,6 @@ body{
     
     /* Icon Styling */
     .activity-icon {
-      font-size: 3rem;
       margin-bottom: 10px;
     } 
     
@@ -524,6 +523,9 @@ body{
         width: 33vw;
         height: 7vh;
       }
+      .reserve:hover{
+        font-size: 1.1rem;
+      }
       .NotreMaison{
         display: flex;
         justify-content: space-around;
@@ -613,7 +615,6 @@ body{
       }
     
       .activity-icon {
-        font-size: 2.3rem;
         margin-bottom: 3px; /* Adjust spacing for mobile */
       }
     
