@@ -285,7 +285,7 @@ body{
     .activity-icon {
       font-size: 3rem;
       margin-bottom: 10px;
-    }
+    } 
     
     .activity-label {
       font-size: 1.2rem;
@@ -383,7 +383,7 @@ body{
     }
     
     .nav-button.prev {
-      left: 3rem !important;
+      left: 1rem !important;
     }
     
     .nav-button.next {
@@ -423,6 +423,7 @@ body{
       justify-content: center;
       margin-top: 8vh;
       margin-right: 1vw;
+      position: relative;
     }
     .EnSavoirPlusA{
       text-decoration: none; /* Remove underline */
@@ -456,6 +457,25 @@ body{
       font-size: 1.2rem;
       transform: scale(1.1);
       /* background-color: rgba(255, 255, 255, 0.6) */
+    }
+    .scroll-to-top-button {
+      position: absolute;
+      bottom: 3vh;
+      right: 3vw;
+      width: 50px;
+      height: 50px;
+      background-color: gray;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+    }
+    
+    .scroll-to-top-button:hover {
+      background-color: darkgray;
     }
 
     @media (max-width: 1024px){
@@ -639,7 +659,10 @@ body{
       }
       .dot {
         max-width: 1px !important;
-        min-height: 12px !important;
+        max-height: 1px !important;
+        transform: translateX(0%);
+        border-radius: none;
+        display: none;
       }
       .nav-button.prev{
         left: -18px !important;
@@ -652,9 +675,11 @@ body{
         justify-content: center;
         align-items: center;
         margin-top: 0;
+        margin-bottom: 6vh;
       }
-      /* .buttonWrapperRegion{
-        display: block;
-      } */
+      .scroll-to-top-button {
+        right: 6vw;
+        bottom: -3vh;
+      }
     }
   

@@ -24,14 +24,14 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
   const [fetchedMinNightsRules, setFetchedMinNightsRules] = useState([]);
   const [basePrice, setBasePrice] = useState(null);
   const [options, setOptions] = useState({
-    heater: { selected: false, price: 50 },
-    bedMade: { selected: false, price: 50 },
-    cleaning: { selected: false, price: 50 },
-    breakfast: { selected: false, price: 25 },
-    co: { selected: false, price: 50 },
-    ko: { selected: false, price: 50 },
-    lo: { selected: false, price: 50 },
-    momom: { selected: false, price: 25 },
+    Option1: { selected: false, price: 50 },
+    Option2: { selected: false, price: 50 },
+    Option3: { selected: false, price: 50 },
+    Option4: { selected: false, price: 25 },
+    Option5: { selected: false, price: 50 },
+    Option6: { selected: false, price: 50 },
+    Option7: { selected: false, price: 50 },
+    Option8: { selected: false, price: 25 },
   });
   const [showPopup, setShowPopup] = useState(false);
 
@@ -111,7 +111,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
   const handleAdultsChange = (value) => {
     const newValue = Math.min(10, Math.max(1, value));
     if (newValue + children > 10) {
-      setError('Combined number of adults and children cannot exceed 10');
+      setError("Le nombre total d'adultes et d'enfants ne peut pas dépasser 10.");
       return;
     }
     setError('');
@@ -121,7 +121,7 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
   const handleChildrenChange = (value) => {
     const newValue = Math.min(10, Math.max(0, value));
     if (adults + newValue > 10) {
-      setError('Combined number of adults and children cannot exceed 10');
+      setError("Le nombre total d'adultes et d'enfants ne peut pas dépasser 10.");
       return;
     }
     setError('');
@@ -160,8 +160,8 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
   
     try {
       // Send emails
-      await emailjs.send('service_n26skoe', 'template_dubm5ow', { ...emailParams, to_email: email }); // Send to client
-      await emailjs.send('service_n26skoe', 'template_gkwsk49', { ...emailParams, to_email: 'your-business-email@example.com' }); // Send to owner
+      await emailjs.send('service_n26skoe', 'template_dubm5ow', { ...emailParams, to_email: email }); // Send to client replace serviceID & templateID
+      await emailjs.send('service_n26skoe', 'template_gkwsk49', { ...emailParams, to_email: 'lepetitenoirie@gmail.com' }); // Send to owner 
   
       // Show pop-up
       setShowPopup(true);
@@ -324,10 +324,11 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group-resa">
-            <label className="form-label-resa">Nombre de bébés</label>
+            <label className="form-label-resa">Nombre de bébés (max 2)</label>
             <input
               type="number"
               min="0"
+              max="2"
               value={babies}
               onChange={(e) => setBabies(parseInt(e.target.value))}
               className="form-input-resa number-input-resa"

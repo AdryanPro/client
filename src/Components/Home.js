@@ -10,8 +10,8 @@ import Fromage from '../Images/NotreRegion3.png'
 import PetitVillage from '../Images/NotreRegion4.png'
 import LaMayenne from '../Images/NotreRegion5.png'
 import Logo from '../Images/LogoMaison.png'
-import Footer from './LayoutComponents/Footer';
 import NavBar from './LayoutComponents/NavBar';
+import { ChevronUp } from 'lucide-react';
 
 export const Home = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -209,6 +209,13 @@ export const Home = () => {
             <a className='EnSavoirPlusA' href="https://www.mayenne-tourisme.com/">
                 <button className='EnSavoirPlusBtn'>EN SAVOIR PLUS</button>
             </a>
+
+            <div 
+              className="scroll-to-top-button" 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              <ChevronUp size={24} color="#fff" /> {/* Triangle icon */}
+            </div>
         </div>
     </div>
   )
