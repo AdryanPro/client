@@ -16,7 +16,9 @@ import epice from "../Images/cardHomePage/epice.png"
 import miniGolf from "../Images/cardHomePage/miniGolf.png"
 import pedalo from "../Images/cardHomePage/pedalo.png"
 import velo from "../Images/cardHomePage/velo.png"
-import pied from "../Images/cardHomePage/pied.png"
+import chateau from "../Images/cardHomePage/chateau.png"
+import guingette from "../Images/cardHomePage/guingette.png"
+import restaurant from "../Images/cardHomePage/restaurant.png"
 
 export const Home = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,14 +46,14 @@ export const Home = () => {
       }
     ];
     const activities = [
-      { icon: pied, label: "Balade à pied", link: "https://example.com/balade" },
-      { icon: "🎤", label: "Guinguette", link: "https://www.facebook.com/share/1AuQVgrdtH/?mibextid=wwXIfr" },
-      { icon: velo, label: "Balade à vélo", link: "https://example.com/velo" },
-      { icon: pedalo, label: "Location de pédalos", link: "https://example.com/pedalo" },
-      { icon: accrobranche, label: "Accrobranche", link: "https://example.com/accrobranche" },
-      { icon: miniGolf, label: "Mini Golf", link: "https://example.com/mini-golf" },
-      { icon: "🏰", label: "Châteaux", link: "https://example.com/chateaux" },
-      { icon: epice, label: "Épicerie", link: "https://example.com/epicerie" }
+      { icon: restaurant, label: "restaurant", link: "https://www.la-taverne-daon.fr/" },
+      { icon: guingette, label: "Guinguette", link: "https://www.facebook.com/share/1AuQVgrdtH/?mibextid=wwXIfr" },
+      { icon: velo, label: "Balade à vélo & Balade à pied", link: "https://www.anjou-tourisme.com/fr/voir-faire/balades/balades-velo/le-chemin-de-halage-de-la-mayenne?srsltid=AfmBOoqTJ0nR4R5mau609Z83Ji_hwuoe40XpWZI0RWZmEZ4rQg9A9oGa" },
+      { icon: pedalo, label: "Location de pédalos", link: "https://www.facebook.com/share/1AuQVgrdtH/?mibextid=wwXIfr" },
+      { icon: accrobranche, label: "Accrobranche", link: "https://anjousportnature.com/" },
+      { icon: miniGolf, label: "Mini Golf", link: "https://www.facebook.com/share/1AuQVgrdtH/?mibextid=wwXIfr" },
+      { icon: chateau, label: "Châteaux", link: "https://www.mayenne-tourisme.com/" },
+      { icon: epice, label: "Épicerie", link: "https://www.facebook.com/barLeRelaisDaon/?_rdr" }
     ];
     const nextSlide = useCallback(() => {
       setCurrentIndex(prevIndex => 

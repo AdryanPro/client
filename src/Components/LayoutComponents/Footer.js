@@ -25,8 +25,8 @@ export default function Footer({ isAdmin, handleAdminSwitch }) {
 
           <div className="contact">
             <h1 className='contactH1'>Coordonnées :</h1>
-            <p className='contactP'>06 07 08 09 10</p>
-            <p className='contactP'>lalongere@.com</p>
+            <p className='contactP'>+33 6 98 85 90 88</p>
+            <p className='contactP'>lepetitenoirie@gmail.com</p>
             <a className='FooterA' href='https://www.google.com/maps/place/1+Rte+de+la+Mayenne,+49220+La+Jaille-Yvon'>
               <p className='contactP'>1 route de la Mayenne, France</p>
             </a>

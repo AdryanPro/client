@@ -24,14 +24,12 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
   const [fetchedMinNightsRules, setFetchedMinNightsRules] = useState([]);
   const [basePrice, setBasePrice] = useState(null);
   const [options, setOptions] = useState({
-    Option1: { selected: false, price: 50 },
-    Option2: { selected: false, price: 50 },
-    Option3: { selected: false, price: 50 },
-    Option4: { selected: false, price: 25 },
-    Option5: { selected: false, price: 50 },
-    Option6: { selected: false, price: 50 },
-    Option7: { selected: false, price: 50 },
-    Option8: { selected: false, price: 25 },
+    "Ménage Obligatoire": { selected: true, price: 150 },
+    "Chauffage / par jour" : { selected: false, price: 40 },
+    "Bois pour la cheminée": { selected: false, price: 50 },
+    "Literie lits double (par lits)": { selected: false, price: 30 },
+    "lits simple": { selected: false, price: 20 },
+    "Lits bébé/jeune enfant": { selected: false, price: 5 },
   });
   const [showPopup, setShowPopup] = useState(false);
   const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
@@ -337,11 +335,11 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
           </div>
 
           <div className="form-group-resa">
-            <label className="form-label-resa">Nombre d'animaux (max 5)</label>
+            <label className="form-label-resa">Nombre d'animaux (max 2)</label>
             <input
               type="number"
               min="0"
-              max="5"
+              max="2"
               value={pets}
               onChange={(e) => setPets(Math.min(5, parseInt(e.target.value)))}
               className="form-input-resa number-input-resa"
