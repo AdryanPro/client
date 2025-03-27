@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css";
 import "../CSS/AdminCalendar.css";
 import NavBar from './LayoutComponents/NavBar';
+import { db } from '../firebaseConfig';
+import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 
 const AdminCalendar = () => {
   // State for storing fetched data
@@ -13,8 +14,6 @@ const AdminCalendar = () => {
   const [priceStartDate, setPriceStartDate] = useState(null);
   const [priceEndDate, setPriceEndDate] = useState(null);
   const [rangePrice, setRangePrice] = useState('');
-
-  // State for form inputs
   const [selectedDate, setSelectedDate] = useState(null);
   const [price, setPrice] = useState('');
   const [basePrice, setBasePrice] = useState('');
@@ -24,88 +23,95 @@ const AdminCalendar = () => {
   const [minNightsEndDate, setMinNightsEndDate] = useState(null);
   const [minNights, setMinNights] = useState('');
   const [refresh, setRefresh] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
- // Your backend server URL
-  // Fetch initial data from backend
+  // Utility functions
+  function getDateRange(start, end) {
+    let dates = [];
+    let currentDate = new Date(start);
+    const endDate = new Date(end);
 
+    while (currentDate <= endDate) {
+      dates.push(currentDate.toISOString().split('T')[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
+  }
+
+  function renderDatePrice(date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dateStr = date.toISOString().split('T')[0];
+
+    if (blockedDates.includes(dateStr)) return '';
+    if (prices[dateStr]) return `${prices[dateStr]}€`;
+    return basePrice ? `${basePrice}€` : '';
+  }
+
+  function getCurrentPrice() {
+    if (!prices || Object.keys(prices).length === 0) return 'Aucun prix défini';
+    if (basePrice) return `${basePrice}`;
+
+    const priceValues = Object.values(prices).filter((price) => price !== basePrice);
+    if (priceValues.length === 0) return 'Aucun prix défini';
+
+    const priceCounts = priceValues.reduce((acc, price) => {
+      acc[price] = (acc[price] || 0) + 1;
+      return acc;
+    }, {});
+
+    const mostFrequentPrice = Object.keys(priceCounts).reduce((a, b) =>
+      priceCounts[a] > priceCounts[b] ? a : b
+    );
+    return `${mostFrequentPrice}`;
+  }
+
+  // Firebase data fetching
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
-        // Add the admin password to the request headers
-        const response = await axios.get(`${BASE_URL}/api/admin-calendar`, {
-          headers: {
-            'password': 'JeSuisTropFort' 
-          }
-        });
-        setPrices(response.data.prices || {});
-        setBlockedDates(response.data.blockedDates || []);
-        setMinNightsRules(response.data.minNightsRules || []);
-        setBasePrice(response.data.basePrice ? parseFloat(response.data.basePrice) : "");
+        const settingsRef = doc(db, 'adminSettings', 'settings');
+        const settingsDoc = await getDoc(settingsRef);
+        
+        if (settingsDoc.exists()) {
+          const data = settingsDoc.data();
+          setPrices(data.prices || {});
+          setBlockedDates(data.blockedDates || []);
+          setMinNightsRules(data.minNightsRules || []);
+          setBasePrice(data.basePrice ? parseFloat(data.basePrice) : "");
+        }
       } catch (error) {
         console.error("Error fetching calendar data:", error);
       }
     };
+    
     fetchCalendarData();
   }, [refresh]);
 
-  // const [adminPassword, setAdminPassword] = useState('');
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
-  // useEffect(() => {
-  //   const fetchCalendarData = async () => {
-  //     try {
-  //       // Use the state value instead of the hardcoded password
-  //       const response = await axios.get(`${BASE_URL}/api/admin-calendar`, {
-  //         headers: {
-  //           'password': adminPassword 
-  //         }
-  //       });
-  //       setPrices(response.data.prices || {});
-  //       setBlockedDates(response.data.blockedDates || []);
-  //       setMinNightsRules(response.data.minNightsRules || []);
-  //       setBasePrice(response.data.basePrice ? parseFloat(response.data.basePrice) : "");
-  //     } catch (error) {
-  //       console.error("Error fetching calendar data:", error);
-  //       // Handle authentication error (e.g., show login form)
-  //       if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-  //         // Set a state to show login form or handle accordingly
-  //         setIsAuthenticated(false);
-  //       }
-  //     }
-  //   };
-    
-  //   // Only fetch data if we have a password
-  //   if (adminPassword) {
-  //     fetchCalendarData();
-  //   }
-  // }, [adminPassword, refresh]);
-
-  // Update price for a specific range of dates
+  // Handler functions
   const handleSetRangePrice = async () => {
     if (!priceStartDate || !priceEndDate || !rangePrice) return;
   
-    const startStr = priceStartDate.toISOString().split('T')[0];
-    const endStr = priceEndDate.toISOString().split('T')[0];
-    const dateRange = getDateRange(priceStartDate, priceEndDate);
-  
     try {
-      await axios.post(`${BASE_URL}/api/update-price-range`, {
-        startDate: startStr,
-        endDate: endStr,
-        newPrice: rangePrice,
+      const dateRange = getDateRange(priceStartDate, priceEndDate);
+      const settingsRef = doc(db, 'adminSettings', 'settings');
+      const settingsDoc = await getDoc(settingsRef);
+  
+      let currentPrices = {};
+      if (settingsDoc.exists()) {
+        currentPrices = settingsDoc.data().prices || {};
+      } else {
+        // If the document doesn't exist, create it
+        await setDoc(settingsRef, { prices: {} });
+      }
+  
+      dateRange.forEach((date) => {
+        currentPrices[date] = parseFloat(rangePrice);
       });
   
-      // ✅ Ensure all selected dates get the new price
-      setPrices(prev => {
-        const updatedPrices = { ...prev };
-        dateRange.forEach(date => {
-          updatedPrices[date] = rangePrice;
-        });
-        return updatedPrices;
-      });
-  
-      // ✅ Clear inputs after updating
+      await updateDoc(settingsRef, { prices: currentPrices });
+      setPrices(currentPrices);
       setPriceStartDate(null);
       setPriceEndDate(null);
       setRangePrice('');
@@ -113,56 +119,47 @@ const AdminCalendar = () => {
       console.error("Error updating price range:", error);
     }
   };
-  
-  
 
-  // Set base price for all future dates
   const handleSetBasePrice = async () => {
     if (!basePrice) return;
   
     try {
-      await axios.post(`${BASE_URL}/api/set-base-price`, { basePrice });
+      const settingsRef = doc(db, 'adminSettings', 'settings');
+      const settingsDoc = await getDoc(settingsRef);
   
-      // ✅ Ensure the new base price updates the state correctly
-      setPrices(prev => ({ ...prev, basePrice: parseFloat(basePrice) }));
+      if (!settingsDoc.exists()) {
+        // If the document doesn't exist, create it
+        await setDoc(settingsRef, { basePrice: parseFloat(basePrice) });
+      } else {
+        await updateDoc(settingsRef, { basePrice: parseFloat(basePrice) });
+      }
   
-      // ❌ Don't clear the input field! Keep it visible in the UI
+      setRefresh((prev) => !prev); // Trigger a refresh
     } catch (error) {
       console.error("Error setting base price:", error);
     }
   };
 
-  // Utility function to generate date range
-  const getDateRange = (start, end) => {
-    let dates = [];
-    let currentDate = new Date(start);
-    const endDate = new Date(end);
-  
-    while (currentDate <= endDate) {
-      dates.push(currentDate.toISOString().split('T')[0]); // Convert to string format
-      currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-    }
-  
-    return dates;
-  };
-
-  // Block a date range
   const handleBlockDateRange = async () => {
     if (!blockStartDate || !blockEndDate) return;
   
     try {
-      // Generate all dates in the range
       const dateRange = getDateRange(blockStartDate, blockEndDate);
+      const settingsRef = doc(db, 'adminSettings', 'settings');
+      const settingsDoc = await getDoc(settingsRef);
   
-      // Send the full list of blocked dates to the backend
-      await axios.post(`${BASE_URL}/api/block-dates`, {
-        dates: dateRange, 
-      });
+      let currentBlockedDates = [];
+      if (settingsDoc.exists()) {
+        currentBlockedDates = settingsDoc.data().blockedDates || [];
+      } else {
+        // If the document doesn't exist, create it
+        await setDoc(settingsRef, { blockedDates: [] });
+      }
   
-      // Update the state with all blocked dates
-      setBlockedDates(prev => [...new Set([...prev, ...dateRange])]);
+      const updatedBlockedDates = [...new Set([...currentBlockedDates, ...dateRange])];
+      await updateDoc(settingsRef, { blockedDates: updatedBlockedDates });
   
-      // Clear input fields
+      setBlockedDates(updatedBlockedDates);
       setBlockStartDate(null);
       setBlockEndDate(null);
     } catch (error) {
@@ -170,15 +167,21 @@ const AdminCalendar = () => {
     }
   };
 
-  // Unblock a date range
   const handleUnblockDateRange = async () => {
     if (!blockStartDate || !blockEndDate) return;
+    
     try {
-      await axios.post(`${BASE_URL}/api/unblock-dates`, {
-        startDate: blockStartDate.toISOString().split('T')[0],
-        endDate: blockEndDate.toISOString().split('T')[0],
-      });
-      setBlockedDates(prev => prev.filter(date => !getDateRange(blockStartDate, blockEndDate).includes(date)));
+      const dateRange = getDateRange(blockStartDate, blockEndDate);
+      const settingsRef = doc(db, 'calendar', 'settings');
+      const settingsDoc = await getDoc(settingsRef);
+      const currentBlockedDates = settingsDoc.exists() ? settingsDoc.data().blockedDates || [] : [];
+
+      const updatedBlockedDates = currentBlockedDates.filter(
+        date => !dateRange.includes(date)
+      );
+
+      await updateDoc(settingsRef, { blockedDates: updatedBlockedDates });
+      setBlockedDates(updatedBlockedDates);
       setBlockStartDate(null);
       setBlockEndDate(null);
     } catch (error) {
@@ -186,113 +189,102 @@ const AdminCalendar = () => {
     }
   };
 
-  // Set minimum nights for a period
   const handleSetMinNights = async () => {
     if (!minNightsStartDate || !minNightsEndDate || !minNights) return;
+  
     try {
-      await axios.post(`${BASE_URL}/api/set-min-nights`, {
+      const newRule = {
         startDate: minNightsStartDate.toISOString().split('T')[0],
         endDate: minNightsEndDate.toISOString().split('T')[0],
-        minNights,
-      });
-      setMinNightsRules(prev => [...prev, {
-        startDate: minNightsStartDate.toISOString().split('T')[0],
-        endDate: minNightsEndDate.toISOString().split('T')[0],
-        minNights,
-      }]);
+        minNights: parseInt(minNights),
+      };
+  
+      const settingsRef = doc(db, 'adminSettings', 'settings'); // Correct path
+      const settingsDoc = await getDoc(settingsRef);
+  
+      let currentRules = [];
+      if (settingsDoc.exists()) {
+        currentRules = settingsDoc.data().minNightsRules || [];
+      } else {
+        // If the document doesn't exist, create it
+        await setDoc(settingsRef, { minNightsRules: [] });
+      }
+  
+      const updatedRules = [...currentRules, newRule];
+      await updateDoc(settingsRef, { minNightsRules: updatedRules });
+  
+      setMinNightsRules(updatedRules);
       setMinNightsStartDate(null);
       setMinNightsEndDate(null);
       setMinNights('');
     } catch (error) {
-      console.error("Error setting minimum nights:", error);
+      console.error('Error setting minimum nights:', error);
     }
-  };
+  };  
 
-  // Remove a minimum nights rule
   const handleRemoveMinNightsRule = async (index) => {
     try {
-        const response = await axios.delete(`${BASE_URL}/api/remove-min-nights-rule/${index}`);
-        
-        // ✅ Update state to reflect the removed rule
-        setMinNightsRules(response.data.minNightsRules);
+      const settingsRef = doc(db, 'adminSettings', 'settings'); // Correct path
+      const settingsDoc = await getDoc(settingsRef);
+  
+      if (!settingsDoc.exists()) {
+        console.error('Document does not exist at path: adminSettings/settings');
+        return;
+      }
+  
+      const currentRules = settingsDoc.data().minNightsRules || [];
+      const updatedRules = currentRules.filter((_, i) => i !== index); // Remove the rule at the specified index
+  
+      await updateDoc(settingsRef, { minNightsRules: updatedRules });
+      setMinNightsRules(updatedRules); // Update local state
     } catch (error) {
-        console.error("Error removing minimum nights rule:", error);
+      console.error('Error removing minimum nights rule:', error);
     }
-};
-
-  // Get the most frequent price
-  const getCurrentPrice = () => {
-    if (!prices || Object.keys(prices).length === 0) return 'Aucun prix défini';
-  
-    // ✅ Check if a base price exists and return it
-    if (basePrice) {
-      return `${basePrice}`; // €
-    }
-  
-    // ✅ If no base price, get the most common price from stored prices
-    const priceValues = Object.values(prices).filter((price) => price !== basePrice);
-    if (priceValues.length === 0) return 'Aucun prix défini';
-  
-    const priceCounts = priceValues.reduce((acc, price) => {
-      acc[price] = (acc[price] || 0) + 1;
-      return acc;
-    }, {});
-  
-    // ✅ Get the most frequent price
-    const mostFrequentPrice = Object.keys(priceCounts).reduce((a, b) =>
-      priceCounts[a] > priceCounts[b] ? a : b
-    );
-  
-    return `${mostFrequentPrice}`; // €
   };
-  
-  
-  
 
-  // Display price for a date in the calendar
-  const renderDatePrice = (date) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
-  
-    const dateStr = date.toISOString().split('T')[0];
-  
-    if (blockedDates.includes(dateStr)) return ''; // Hide price for blocked dates
-    if (prices[dateStr]) return `${prices[dateStr]}€`; // Show set price for that day
-    return basePrice ? `${basePrice}€` : ''; // Default to base price
-  };
-  
-
-  // Unblock a single date
   const handleUnblockDate = async (date) => {
     try {
-        await axios.delete(`${BASE_URL}/api/unblock-date/${date}`);
-        setBlockedDates(prev => prev.filter(d => d !== date)); // Update UI
+      const settingsRef = doc(db, 'adminSettings', 'settings'); // Correct path
+      const settingsDoc = await getDoc(settingsRef);
+  
+      if (!settingsDoc.exists()) {
+        console.error('Document does not exist at path: adminSettings/settings');
+        return;
+      }
+  
+      const currentBlockedDates = settingsDoc.data().blockedDates || [];
+      const updatedBlockedDates = currentBlockedDates.filter((d) => d !== date); // Remove the specified date
+  
+      await updateDoc(settingsRef, { blockedDates: updatedBlockedDates });
+      setBlockedDates(updatedBlockedDates); // Update local state
     } catch (error) {
-        console.error("Error unblocking date:", error);
+      console.error('Error unblocking date:', error);
     }
   };
 
-  //Function to remove the selected rang of dates
   const handleRemovePrice = async (date) => {
-    const dateStr = date.toISOString().split('T')[0]; // Convert Date object to "YYYY-MM-DD" format
+    const dateStr = date.toISOString().split('T')[0];
   
     try {
-      await axios.delete(`${BASE_URL}/api/remove-price/${dateStr}`);
+      const settingsRef = doc(db, 'adminSettings', 'settings'); // Correct path
+      const settingsDoc = await getDoc(settingsRef);
   
-      // Update local state to reflect the removed price
-      setPrices(prev => {
-        const updatedPrices = { ...prev };
-        delete updatedPrices[dateStr];
-        return updatedPrices;
-      });
+      if (!settingsDoc.exists()) {
+        console.error('Document does not exist at path: adminSettings/settings');
+        return;
+      }
   
+      const currentPrices = settingsDoc.data().prices || {};
+      delete currentPrices[dateStr];
+  
+      await updateDoc(settingsRef, { prices: currentPrices });
+      setPrices(currentPrices);
       setSelectedDate(null);
-      setRefresh(prev => !prev); // Trigger a re-render
+      setRefresh((prev) => !prev);
     } catch (error) {
-      console.error("Error removing price for selected date:", error);
+      console.error('Error removing price:', error);
     }
   };
-
   return (
 <div className="admin-booking-container">
   <NavBar/>

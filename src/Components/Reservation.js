@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import "../CSS/Reservation.css";
-import axios from 'axios';
 import NavBar from './LayoutComponents/NavBar';
 import emailjs from "@emailjs/browser";
+import { db } from '../firebaseConfig';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
   const [startDate, setStartDate] = useState(null);
@@ -32,18 +33,23 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     "Lits bébé/jeune enfant": { selected: false, price: 5 },
   });
   const [showPopup, setShowPopup] = useState(false);
-  const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/get-reservation-data`);
-        setFetchedPrices(response.data.prices || {});
-        setFetchedBlockedDates(response.data.blockedDates || []);
-        setFetchedMinNightsRules(response.data.minNightsRules || []);
-        setBasePrice(response.data.basePrice || null);
+        const settingsRef = doc(db, 'adminSettings', 'settings');
+        const settingsDoc = await getDoc(settingsRef);
+        
+        if (settingsDoc.exists()) {
+          const data = settingsDoc.data();
+          setFetchedPrices(data.prices || {});
+          setFetchedBlockedDates(data.blockedDates || []);
+          setFetchedMinNightsRules(data.minNightsRules || []);
+          setBasePrice(data.basePrice || null);
+        }
       } catch (error) {
         console.error("Error fetching reservation data:", error);
+        setError("Unable to load reservation data. Please try again later.");
       }
     };
   
@@ -60,6 +66,20 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     setError('');
   };
 
+  const saveReservation = async (reservationData) => {
+    try {
+      const reservationsRef = doc(db, 'reservations', new Date().getTime().toString());
+      await setDoc(reservationsRef, {
+        ...reservationData,
+        createdAt: new Date().toISOString(),
+        status: 'pending'
+      });
+      return true;
+    } catch (error) {
+      console.error('Error saving reservation:', error);
+      return false;
+    }
+  };
   const handleEndDateChange = (date) => {
     if (!startDate || !date) {
       setEndDate(date);
@@ -127,22 +147,46 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
     setChildren(newValue);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (adults + children > 10) {
-      setError('Combined number of adults and children cannot exceed 10');
-      return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (adults + children > 10) {
+    setError('Combined number of adults and children cannot exceed 10');
+    return;
+  }
+
+  setError('');
+
+  const selectedOptions = Object.entries(options)
+    .filter(([_, value]) => value.selected)
+    .map(([key]) => key)
+    .join(', ');
+
+  const totalPrice = calculateTotalPrice();
+
+  const reservationData = {
+    firstName,
+    lastName,
+    email,
+    phone,
+    checkIn: startDate ? startDate.toISOString() : '',
+    checkOut: endDate ? endDate.toISOString() : '',
+    adults,
+    children,
+    babies,
+    pets,
+    selectedOptions,
+    totalPrice,
+    status: 'pending'
+  };
+
+  try {
+    // Save to Firebase
+    const savedSuccessfully = await saveReservation(reservationData);
+    if (!savedSuccessfully) {
+      throw new Error('Failed to save reservation');
     }
-  
-    setError('');
-  
-    const selectedOptions = Object.entries(options)
-      .filter(([_, value]) => value.selected)
-      .map(([key]) => key)
-      .join(', ');
-  
-    const totalPrice = calculateTotalPrice();
-  
+
+    // Send emails
     const emailParams = {
       guest_name: `${firstName} ${lastName}`,
       guest_email: email,
@@ -156,20 +200,17 @@ export const Reservation = ({ prices, blockedDates, minNightsRules }) => {
       selected_options: selectedOptions || 'None',
       total_price: `€${totalPrice}`,
     };
-  
-    try {
-      // Send emails
-      await emailjs.send('service_n26skoe', 'template_dubm5ow', { ...emailParams, to_email: email }); // Send to client replace serviceID & templateID
-      await emailjs.send('service_n26skoe', 'template_gkwsk49', { ...emailParams, to_email: 'lepetitenoirie@gmail.com' }); // Send to owner 
-  
-      // Show pop-up
-      setShowPopup(true);
-  
-    } catch (error) {
-      console.error('EmailJS error:', error);
-      setError('Failed to send reservation. Please try again later.');
-    }
-  };
+
+    await emailjs.send('service_n26skoe', 'template_dubm5ow', { ...emailParams, to_email: email });
+    await emailjs.send('service_n26skoe', 'template_gkwsk49', { ...emailParams, to_email: 'lepetitenoirie@gmail.com' });
+
+    setShowPopup(true);
+
+  } catch (error) {
+    console.error('Submission error:', error);
+    setError('Failed to submit reservation. Please try again later.');
+  }
+};
 
   const isDateBlocked = (date) => {
     const dateStr = date.toISOString().split('T')[0];

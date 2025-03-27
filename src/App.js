@@ -6,9 +6,9 @@ import { Contact } from "./Components/Contact";
 import AdminCalendar from './Components/AdminCalendar';
 import React, { useState, useEffect } from "react";
 import "./CSS/popupAdmin.css";
-import APropos from "./Components/APropos";
 import Footer from "./Components/LayoutComponents/Footer";
-import axios from "axios"; // Make sure axios is installed
+import { db } from './firebaseConfig';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 function App() {
   // Global state for reservation management
@@ -21,51 +21,67 @@ function App() {
   const [minNightsRules, setMinNightsRules] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+  // Fetch Reservation Data on Component Mount
+  useEffect(() => {
+    const fetchReservationData = async () => {
+      try {
+        const settingsRef = doc(db, 'calendar', 'settings');
+        const settingsDoc = await getDoc(settingsRef);
+        
+        if (settingsDoc.exists()) {
+          const data = settingsDoc.data();
+          setPrices(data.prices || {});
+          setBlockedDates(data.blockedDates || []);
+          setMinNightsRules(data.minNightsRules || []);
+        }
+      } catch (error) {
+        console.error('Error fetching reservation data:', error);
+      }
+    };
 
-
-  const handlePriceUpdate = (newPrices) => {
-    setPrices(newPrices);
-  };
-
-  const handleBlockedDatesUpdate = (newBlockedDates) => {
-    setBlockedDates(newBlockedDates);
-  };
-
-  const handleMinNightsUpdate = (newRules) => {
-    setMinNightsRules(newRules);
-  };
+    fetchReservationData();
+  }, []);
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+  
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/admin-calendar`, {
-        headers: {
-          'password': password
-        }
-      });
-      
-      // Si la requête réussit, l'authentification est considérée comme réussie
-      setIsAdmin(true);
-      setShowPasswordPrompt(false);
-      setPassword('');
-      setPasswordError('');
-    } catch (error) {
-      // Gérer l'erreur d'authentification
-      console.error('Authentication error:', error);
-      
-      if (error.response) {
-        // Le serveur a répondu avec un statut d'erreur
-        setPasswordError(error.response.data.error || 'Authentication failed');
-      } else if (error.request) {
-        // La requête a été faite mais aucune réponse n'a été reçue
-        setPasswordError('No response from server. Please try again.');
-      } else {
-        // Une erreur s'est produite lors de la configuration de la requête
-        setPasswordError('Error sending request. Please try again.');
+      // Update the path to match your Firestore structure
+      const settingsRef = doc(db, 'adminSettings', 'settings');
+      console.log('Fetching document from path: adminSettings/settings'); // Debugging log
+      const settingsDoc = await getDoc(settingsRef);
+  
+      // Check if the document exists
+      if (!settingsDoc.exists()) {
+        console.error('Document does not exist at path: adminSettings/settings'); // Debugging log
+        throw new Error('Admin settings not found');
       }
+  
+      // Log the document data for debugging
+      const data = settingsDoc.data();
+      console.log('Document data:', data);
+  
+      const adminPassword = data.adminPassword || '';
+      if (password === adminPassword) {
+        setIsAdmin(true);
+        setShowPasswordPrompt(false);
+  
+        // Set data from Firestore
+        setPrices(data.prices || {});
+        setBlockedDates(data.blockedDates || []);
+        setMinNightsRules(data.minNightsRules || []);
+  
+        // Reset form states
+        setPassword('');
+        setPasswordError('');
+      } else {
+        throw new Error('Invalid password');
+      }
+    } catch (error) {
+      console.error('Authentication error:', error); // Debugging log
+      setPasswordError(error.message || 'Authentication failed');
+      setIsAdmin(false);
     } finally {
       setIsLoading(false);
     }
@@ -73,32 +89,80 @@ function App() {
 
   const handleAdminSwitch = () => {
     if (isAdmin) {
+      // Log out admin
       setIsAdmin(false);
     } else {
+      // Show password prompt
       setShowPasswordPrompt(true);
     }
   };
 
-  // Optional: Function to change admin password
+  // Change Admin Password
   const changeAdminPassword = async (currentPassword, newPassword) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/update-admin-password`, 
-        { newPassword },
-        { headers: { 'password': currentPassword } }
-      );
-      return { success: true, message: 'Password updated successfully' };
+      const settingsRef = doc(db, 'calendar', 'settings');
+      const settingsDoc = await getDoc(settingsRef);
+      
+      if (settingsDoc.exists()) {
+        const data = settingsDoc.data();
+        
+        if (currentPassword === data.adminPassword) {
+          await updateDoc(settingsRef, { adminPassword: newPassword });
+          return { 
+            success: true, 
+            message: 'Password updated successfully' 
+          };
+        } else {
+          throw new Error('Current password is incorrect');
+        }
+      } else {
+        throw new Error('Admin settings not found');
+      }
     } catch (error) {
       console.error('Error updating password:', error);
       return { 
         success: false, 
-        message: error.response?.data?.error || 'Failed to update password' 
+        message: error.message || 'Failed to update password' 
       };
+    }
+  };
+
+  // Price Update Handler
+  const handlePriceUpdate = async (newPrices) => {
+    try {
+      const settingsRef = doc(db, 'calendar', 'settings');
+      await updateDoc(settingsRef, { prices: newPrices });
+      setPrices(newPrices);
+    } catch (error) {
+      console.error('Error updating prices:', error);
+    }
+  };
+
+  // Blocked Dates Update Handler
+  const handleBlockedDatesUpdate = async (newBlockedDates) => {
+    try {
+      const settingsRef = doc(db, 'calendar', 'settings');
+      await updateDoc(settingsRef, { blockedDates: newBlockedDates });
+      setBlockedDates(newBlockedDates);
+    } catch (error) {
+      console.error('Error updating blocked dates:', error);
+    }
+  };
+
+  // Min Nights Rules Update Handler
+  const handleMinNightsUpdate = async (newRules) => {
+    try {
+      const settingsRef = doc(db, 'calendar', 'settings');
+      await updateDoc(settingsRef, { minNightsRules: newRules });
+      setMinNightsRules(newRules);
+    } catch (error) {
+      console.error('Error updating min nights rules:', error);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Admin Password Prompt */}
+      {/* Admin Password Prompt (remains mostly unchanged) */}
       {showPasswordPrompt && (
         <div className="admin-popup-overlay">
           <div className="admin-popup-container">
@@ -147,7 +211,8 @@ function App() {
           </div>
         </div>
       )}
-      {/* Routes */}
+      
+      {/* Routes (unchanged) */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
@@ -161,7 +226,6 @@ function App() {
                 onPriceUpdate={handlePriceUpdate}
                 onBlockedDatesUpdate={handleBlockedDatesUpdate}
                 onMinNightsUpdate={handleMinNightsUpdate}
-                // Pass changeAdminPassword function if you want to implement password change in AdminCalendar
                 changeAdminPassword={changeAdminPassword}
               />
             ) : (
@@ -175,7 +239,6 @@ function App() {
         />
         <Route path="/Galerie" element={<Galerie />} />
         <Route path="/Contact" element={<Contact />} />
-        <Route path="/APropos" element={<APropos />} />
       </Routes>
 
       {/* Footer with Admin Switch */}
